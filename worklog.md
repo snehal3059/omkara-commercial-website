@@ -318,3 +318,25 @@ Stage Summary:
 - 5 manufacturer logos now displayed as images (logo-sail.png, logo-tata-steel.png, logo-gagan-gold.png, logo-shyam-metallics.png, logo-elegant.png)
 - All "Authorized Distributor" / "Authorized Dealer" text removed
 - Clean horizontal logo bar layout with hover effects
+---
+Task ID: 4-11
+Agent: Main Agent
+Task: Add new features to the steel trading website - Floating WhatsApp, FAQ, Scroll Progress Bar, Animated Counters, Google Maps, Announcement Banner
+
+Work Log:
+- Created FloatingWhatsApp.tsx with pulse animation, tooltip, and direct WhatsApp link with pre-filled message
+- Created ScrollProgressBar.tsx with gradient progress indicator (teal to amber)
+- Created AnnouncementBanner.tsx with scrolling marquee text showing offers (free delivery, MTC, bulk pricing)
+- Created FAQSection.tsx with 8 FAQ items (MOQ, MTC, delivery, payments, BIS, custom cuts, GST) and animated counter stats
+- Created useAnimatedCounter.tsx hook with IntersectionObserver and ease-out cubic animation
+- Updated ContactSection.tsx to include Google Maps embed section
+- Updated page.tsx to integrate all new components
+- Fixed missing useState import in AnnouncementBanner
+- Fixed react-hooks/set-state-in-effect lint error in useAnimatedCounter
+- Verified all features via Agent Browser on desktop and mobile
+
+Stage Summary:
+- 6 new features added: Floating WhatsApp, Scroll Progress Bar, Announcement Banner, FAQ Section, Animated Counters, Google Maps
+- All features verified working on both desktop (1920x1080) and mobile (iPhone 14) viewports
+- Zero console errors
+- Lint passes clean

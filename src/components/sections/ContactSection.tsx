@@ -303,6 +303,36 @@ export function ContactSection() {
           </div>
         </div>
       </div>
+
+      {/* Google Maps Embed */}
+      <div className="bg-stone-50 py-16 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-10 text-center">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+              Our Location
+            </p>
+            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900">
+              Find Us on the Map
+            </h2>
+            <p className="mt-3 text-stone-500 text-sm">
+              Visit our warehouse at Belgachia, Salkia, Howrah
+            </p>
+          </div>
+          <div className="rounded-2xl overflow-hidden border border-stone-200 shadow-lg">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.272!2d88.2637!3d22.5775!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sOmkara+Commercial+Pvt+Ltd!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+              width="100%"
+              height="400"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              className="w-full"
+              title="Omkara Commercial Location"
+            />
+          </div>
+        </div>
+      </div>
     </section>
   )
 }

@@ -9,6 +9,10 @@ import { AboutSection } from "@/components/sections/AboutSection"
 import { ContactSection } from "@/components/sections/ContactSection"
 import { GradesSection } from "@/components/sections/GradesSection"
 import { WeightCalculatorSection } from "@/components/sections/WeightCalculatorSection"
+import { FAQSection } from "@/components/sections/FAQSection"
+import { FloatingWhatsApp } from "@/components/FloatingWhatsApp"
+import { ScrollProgressBar } from "@/components/ScrollProgressBar"
+import { AnnouncementBanner } from "@/components/AnnouncementBanner"
 
 export default function Page() {
   const [activePage, setActivePage] = useState("home")
@@ -29,7 +33,12 @@ export default function Page() {
   const renderPage = () => {
     switch (activePage) {
       case "home":
-        return <HomeSection onNavigate={handleNavigate} />
+        return (
+          <>
+            <HomeSection onNavigate={handleNavigate} />
+            <FAQSection />
+          </>
+        )
       case "products":
         return <ProductsSection initialCategory={productCategory} />
       case "about":
@@ -41,15 +50,23 @@ export default function Page() {
       case "weight-calc":
         return <WeightCalculatorSection />
       default:
-        return <HomeSection onNavigate={handleNavigate} />
+        return (
+          <>
+            <HomeSection onNavigate={handleNavigate} />
+            <FAQSection />
+          </>
+        )
     }
   }
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollProgressBar />
+      <AnnouncementBanner />
       <Header activePage={activePage} onNavigate={handleNavigate} />
       <main className="flex-1">{renderPage()}</main>
       <Footer onNavigate={handleNavigate} onProductFilter={handleProductFilter} />
+      <FloatingWhatsApp />
     </div>
   )
 }
