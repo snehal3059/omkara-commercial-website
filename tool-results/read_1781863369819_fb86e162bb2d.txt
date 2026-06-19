@@ -1,0 +1,810 @@
+     1→export interface ProductData {
+     2→  title: string
+     3→  category: string
+     4→  categoryName: string
+     5→  description: string
+     6→  specifications: { key: string; value: string }[]
+     7→  pdfUrl?: string
+     8→}
+     9→
+    10→export const products: Record<string, ProductData> = {
+    11→  "cr-sheet-0-5mm": {
+    12→    title: "CR Sheet 0.5mm (DQ Grade)", category: "ms-sheet", categoryName: "MS Sheet",
+    13→    description: "Cold rolled mild steel sheet manufactured to IS 513 DQ grade. Offers excellent surface finish, tight dimensional tolerances, and superior flatness. Ideal for automotive panels, light engineering, and general fabrication where precise surface quality is critical.",
+    14→    specifications: [
+    15→      { key: "Thickness", value: "0.5mm (0.45 - 0.55mm)" }, { key: "Width", value: "900mm - 1250mm" },
+    16→      { key: "Length", value: "2000mm - 3000mm" }, { key: "Grade", value: "IS 513 DQ" },
+    17→      { key: "Surface", value: "Bright / Matt Finish" }, { key: "Coil Weight", value: "5 - 10 MT" },
+    18→    ],
+    19→  },
+    20→  "cr-sheet-1mm": {
+    21→    title: "CR Sheet 1mm (DD Grade)", category: "ms-sheet", categoryName: "MS Sheet",
+    22→    description: "Deep drawing quality cold rolled sheet per IS 513 DD grade. Excellent drawability for press-formed components, enclosures, and deep-drawn parts. Consistent mechanical properties across the coil.",
+    23→    specifications: [
+    24→      { key: "Thickness", value: "1mm (0.90 - 1.10mm)" }, { key: "Width", value: "900mm - 1500mm" },
+    25→      { key: "Length", value: "2000mm - 3000mm" }, { key: "Grade", value: "IS 513 DD" },
+    26→      { key: "Yield Strength", value: "140 - 280 MPa" }, { key: "Tensile Strength", value: "270 - 410 MPa" },
+    27→    ],
+    28→  },
+    29→  "cr-sheet-1-5mm": {
+    30→    title: "CR Sheet 1.5mm (EDD Grade)", category: "ms-sheet", categoryName: "MS Sheet",
+    31→    description: "Extra deep drawing quality cold rolled steel to IS 513 EDD grade. Highest formability for complex automotive stampings, household appliance panels, and intricate press-work components.",
+    32→    specifications: [
+    33→      { key: "Thickness", value: "1.5mm (1.40 - 1.60mm)" }, { key: "Width", value: "900mm - 1500mm" },
+    34→      { key: "Length", value: "2000mm - 3000mm" }, { key: "Grade", value: "IS 513 EDD" },
+    35→      { key: "Elongation", value: "Min 38%" }, { key: "R Value", value: "Min 1.5" },
+    36→    ],
+    37→  },
+    38→  "cr-sheet-2mm": {
+    39→    title: "CR Sheet 2mm (DQ Grade)", category: "ms-sheet", categoryName: "MS Sheet",
+    40→    description: "Cold rolled sheet in 2mm thickness with DQ grade. Suitable for general fabrication, engineering components, and structural parts requiring good surface finish and dimensional precision.",
+    41→    specifications: [
+    42→      { key: "Thickness", value: "2mm (1.80 - 2.20mm)" }, { key: "Width", value: "1000mm - 1500mm" },
+    43→      { key: "Length", value: "2000mm - 4000mm" }, { key: "Grade", value: "IS 513 DQ" },
+    44→      { key: "Yield Strength", value: "170 - 330 MPa" }, { key: "Elongation", value: "Min 30%" },
+    45→    ],
+    46→  },
+    47→  "hr-sheet-2-5mm": {
+    48→    title: "HR Sheet 2.5mm (E250)", category: "ms-sheet", categoryName: "MS Sheet",
+    49→    description: "Hot rolled sheet per IS 2062 E250 grade. Ideal for structural applications, general fabrication, and heavy machinery enclosures. Cost-effective solution for non-critical structural parts.",
+    50→    specifications: [
+    51→      { key: "Thickness", value: "2.5mm (2.30 - 2.70mm)" }, { key: "Width", value: "1000mm - 2000mm" },
+    52→      { key: "Length", value: "2000mm - 6000mm" }, { key: "Grade", value: "IS 2062 E250" },
+    53→      { key: "Yield Strength", value: "Min 250 MPa" }, { key: "Tensile Strength", value: "410 MPa" },
+    54→    ],
+    55→  },
+    56→  "hr-sheet-3mm": {
+    57→    title: "HR Sheet 3mm (E350)", category: "ms-sheet", categoryName: "MS Sheet",
+    58→    description: "High-strength hot rolled steel sheet to IS 2062 E350 grade. Offers superior strength for demanding industrial applications including heavy equipment, pressure vessels, and load-bearing structures.",
+    59→    specifications: [
+    60→      { key: "Thickness", value: "3mm (2.70 - 3.30mm)" }, { key: "Width", value: "1000mm - 2000mm" },
+    61→      { key: "Length", value: "2000mm - 6000mm" }, { key: "Grade", value: "IS 2062 E350" },
+    62→      { key: "Yield Strength", value: "Min 350 MPa" }, { key: "Elongation", value: "Min 23%" },
+    63→    ],
+    64→  },
+    65→  "hr-sheet-4mm": {
+    66→    title: "HR Sheet 4mm (E250)", category: "ms-sheet", categoryName: "MS Sheet",
+    67→    description: "Hot rolled sheet 4mm thick in E250 grade. Commonly used for structural fabrication, industrial flooring, and general engineering. Good weldability and formability.",
+    68→    specifications: [
+    69→      { key: "Thickness", value: "4mm (3.60 - 4.40mm)" }, { key: "Width", value: "1000mm - 2500mm" },
+    70→      { key: "Length", value: "2000mm - 6000mm" }, { key: "Grade", value: "IS 2062 E250" },
+    71→      { key: "Surface", value: "Hot Rolled / Pickled & Oiled" }, { key: "Elongation", value: "Min 28%" },
+    72→    ],
+    73→  },
+    74→  "hr-sheet-5mm": {
+    75→    title: "HR Sheet 5mm (E350)", category: "ms-sheet", categoryName: "MS Sheet",
+    76→    description: "Heavy-duty hot rolled sheet in E350 grade. Designed for high-stress applications including heavy machinery, earthmoving equipment, and industrial structures.",
+    77→    specifications: [
+    78→      { key: "Thickness", value: "5mm (4.50 - 5.50mm)" }, { key: "Width", value: "1000mm - 2500mm" },
+    79→      { key: "Length", value: "2000mm - 6000mm" }, { key: "Grade", value: "IS 2062 E350" },
+    80→      { key: "Carbon Equivalent", value: "Max 0.45%" }, { key: "Surface", value: "Hot Rolled" },
+    81→    ],
+    82→  },
+    83→  "hr-sheet-6mm": {
+    84→    title: "HR Sheet 6mm (E410)", category: "ms-sheet", categoryName: "MS Sheet",
+    85→    description: "Extra-thick hot rolled high-strength sheet per IS 2062 E410. Used in heavy structural applications, bridges, cranes, and offshore platforms requiring superior strength.",
+    86→    specifications: [
+    87→      { key: "Thickness", value: "6mm (5.50 - 6.50mm)" }, { key: "Width", value: "1000mm - 2500mm" },
+    88→      { key: "Length", value: "2000mm - 6000mm" }, { key: "Grade", value: "IS 2062 E410" },
+    89→      { key: "Yield Strength", value: "Min 410 MPa" }, { key: "Tensile Strength", value: "540 - 680 MPa" },
+    90→    ],
+    91→  },
+    92→  "chequered-plate-3mm": {
+    93→    title: "Chequered Plate 3mm (E250)", category: "ms-sheet", categoryName: "MS Sheet",
+    94→    description: "Patterned anti-skid floor plate with raised chequer pattern. Ideal for industrial flooring, walkways, stair treads, and platforms where slip resistance is essential.",
+    95→    specifications: [
+    96→      { key: "Thickness", value: "3mm (base) + 1.2mm (pattern)" }, { key: "Width", value: "1000mm - 1500mm" },
+    97→      { key: "Length", value: "2000mm - 6000mm" }, { key: "Grade", value: "IS 2062 E250" },
+    98→      { key: "Pattern Height", value: "1.2mm - 1.5mm" }, { key: "Pattern Type", value: "Lentil / Diamond" },
+    99→    ],
+   100→  },
+   101→
+   102→  "ms-plate-6mm": {
+   103→    title: "MS Plate 6mm (E250)", category: "ms-plate", categoryName: "MS Plate",
+   104→    description: "Light-duty MS plate per IS 2062 E250 grade. Suitable for light structural fabrication, gussets, brackets, and general engineering applications requiring flat stock.",
+   105→    specifications: [
+   106→      { key: "Thickness", value: "6mm (5.50 - 6.50mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   107→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E250" },
+   108→      { key: "Weight", value: "47.1 kg/m\u00b2" }, { key: "Elongation", value: "Min 28%" },
+   109→    ],
+   110→  },
+   111→  "ms-plate-8mm": {
+   112→    title: "MS Plate 8mm (E350)", category: "ms-plate", categoryName: "MS Plate",
+   113→    description: "Medium-duty structural plate in E350 grade. Used for structural supports, machine frames, and medium-load applications where higher strength is needed.",
+   114→    specifications: [
+   115→      { key: "Thickness", value: "8mm (7.50 - 8.50mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   116→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E350" },
+   117→      { key: "Weight", value: "62.8 kg/m\u00b2" }, { key: "Yield Strength", value: "Min 350 MPa" },
+   118→    ],
+   119→  },
+   120→  "ms-plate-10mm": {
+   121→    title: "MS Plate 10mm (E250)", category: "ms-plate", categoryName: "MS Plate",
+   122→    description: "Standard structural plate for building frames, machinery bases, and general structural applications. Good weldability and formability with reliable strength.",
+   123→    specifications: [
+   124→      { key: "Thickness", value: "10mm (9.00 - 11.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   125→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E250" },
+   126→      { key: "Weight", value: "78.5 kg/m\u00b2" }, { key: "Carbon Content", value: "Max 0.23%" },
+   127→    ],
+   128→  },
+   129→  "ms-plate-12mm": {
+   130→    title: "MS Plate 12mm (E350)", category: "ms-plate", categoryName: "MS Plate",
+   131→    description: "Industrial plate for heavy equipment bases, load-bearing structures, and medium-duty bridges. Higher strength allows for optimized design and reduced weight.",
+   132→    specifications: [
+   133→      { key: "Thickness", value: "12mm (11.00 - 13.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   134→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E350" },
+   135→      { key: "Weight", value: "94.2 kg/m\u00b2" }, { key: "Tensile Strength", value: "490 - 630 MPa" },
+   136→    ],
+   137→  },
+   138→  "ms-plate-16mm": {
+   139→    title: "MS Plate 16mm (E410)", category: "ms-plate", categoryName: "MS Plate",
+   140→    description: "Heavy plate for bridges, cranes, pressure vessels, and earthmoving equipment. High-strength E410 grade ensures superior load capacity and durability.",
+   141→    specifications: [
+   142→      { key: "Thickness", value: "16mm (15.00 - 17.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   143→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E410" },
+   144→      { key: "Weight", value: "125.6 kg/m\u00b2" }, { key: "Impact Test", value: "27J @ 0\u00b0C" },
+   145→    ],
+   146→  },
+   147→  "ms-plate-20mm": {
+   148→    title: "MS Plate 20mm (E350)", category: "ms-plate", categoryName: "MS Plate",
+   149→    description: "Extra-heavy plate for large structural projects, transmission towers, and offshore platforms. High strength with excellent through-thickness properties.",
+   150→    specifications: [
+   151→      { key: "Thickness", value: "20mm (18.00 - 22.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   152→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E350" },
+   153→      { key: "Weight", value: "157.0 kg/m\u00b2" }, { key: "Elongation", value: "Min 23%" },
+   154→    ],
+   155→  },
+   156→  "ms-plate-25mm": {
+   157→    title: "MS Plate 25mm (E410)", category: "ms-plate", categoryName: "MS Plate",
+   158→    description: "Heavy-gauge plate for shipbuilding, heavy machinery, and mining equipment. High-strength E410 grade ensures exceptional durability under extreme loads.",
+   159→    specifications: [
+   160→      { key: "Thickness", value: "25mm (23.00 - 27.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   161→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E410" },
+   162→      { key: "Weight", value: "196.3 kg/m\u00b2" }, { key: "Yield Strength", value: "Min 410 MPa" },
+   163→    ],
+   164→  },
+   165→  "ms-plate-32mm": {
+   166→    title: "MS Plate 32mm (E450)", category: "ms-plate", categoryName: "MS Plate",
+   167→    description: "Ultra-heavy plate for heavy engineering, mining, and defence applications. Premium E450 grade delivers maximum strength for the most demanding structural requirements.",
+   168→    specifications: [
+   169→      { key: "Thickness", value: "32mm (29.00 - 35.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   170→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E450" },
+   171→      { key: "Weight", value: "251.2 kg/m\u00b2" }, { key: "Carbon Equivalent", value: "Max 0.47%" },
+   172→    ],
+   173→  },
+   174→  "ms-plate-40mm": {
+   175→    title: "MS Plate 40mm (E410)", category: "ms-plate", categoryName: "MS Plate",
+   176→    description: "Industrial jumbo plate for heavy presses, structural columns, and large-scale fabrication. Superior flatness and dimensional consistency for precision engineering.",
+   177→    specifications: [
+   178→      { key: "Thickness", value: "40mm (37.00 - 43.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   179→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E410" },
+   180→      { key: "Weight", value: "314.0 kg/m\u00b2" }, { key: "UT Certification", value: "Available" },
+   181→    ],
+   182→  },
+   183→  "ms-plate-50mm": {
+   184→    title: "MS Plate 50mm (E450)", category: "ms-plate", categoryName: "MS Plate",
+   185→    description: "Extra-jumbo plate for large-scale infrastructure, defence projects, and heavy engineering. The thickest plate in our range with full traceability and mill certification.",
+   186→    specifications: [
+   187→      { key: "Thickness", value: "50mm (46.00 - 54.00mm)" }, { key: "Width", value: "1500mm - 3000mm" },
+   188→      { key: "Length", value: "3000mm - 12000mm" }, { key: "Grade", value: "IS 2062 E450" },
+   189→      { key: "Weight", value: "392.5 kg/m\u00b2" }, { key: "Heat Number", value: "Traceable" },
+   190→    ],
+   191→  },
+   192→
+   193→  "ismb-100x50": {
+   194→    title: "ISMB 100x50 Beam", category: "ms-beam", categoryName: "MS Beam",
+   195→    description: "Light I-beam section for residential building frames, small sheds, and light structural applications.",
+   196→    specifications: [
+   197→      { key: "Section", value: "100 x 50mm" }, { key: "Weight", value: "8.9 kg/m" },
+   198→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   199→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "42.0 cm\u00b3" },
+   200→    ],
+   201→  },
+   202→  "ismb-125x70": {
+   203→    title: "ISMB 125x70 Beam", category: "ms-beam", categoryName: "MS Beam",
+   204→    description: "Medium I-beam for mezzanine floors, light industrial sheds, and residential/commercial buildings.",
+   205→    specifications: [
+   206→      { key: "Section", value: "125 x 70mm" }, { key: "Weight", value: "12.2 kg/m" },
+   207→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   208→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "72.5 cm\u00b3" },
+   209→    ],
+   210→  },
+   211→  "ismb-150x75": {
+   212→    title: "ISMB 150x75 Beam", category: "ms-beam", categoryName: "MS Beam",
+   213→    description: "Standard I-beam for building frames, support columns, and general structural steelwork. One of the most widely used sections in construction.",
+   214→    specifications: [
+   215→      { key: "Section", value: "150 x 75mm" }, { key: "Weight", value: "14.9 kg/m" },
+   216→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808 / IS 2062" },
+   217→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "114.6 cm\u00b3" },
+   218→    ],
+   219→  },
+   220→  "ismb-175x85": {
+   221→    title: "ISMB 175x85 Beam", category: "ms-beam", categoryName: "MS Beam",
+   222→    description: "Heavy I-beam for multi-storey buildings, bridges, and heavy industrial structures.",
+   223→    specifications: [
+   224→      { key: "Section", value: "175 x 85mm" }, { key: "Weight", value: "19.3 kg/m" },
+   225→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   226→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "176.0 cm\u00b3" },
+   227→    ],
+   228→  },
+   229→  "ismb-200x100": {
+   230→    title: "ISMB 200x100 Beam", category: "ms-beam", categoryName: "MS Beam",
+   231→    description: "Structural I-beam for industrial sheds, flyovers, and large commercial buildings.",
+   232→    specifications: [
+   233→      { key: "Section", value: "200 x 100mm" }, { key: "Weight", value: "21.3 kg/m" },
+   234→      { key: "Grade", value: "IS 2062 E250 / E350 / E410" }, { key: "Standard", value: "IS 808" },
+   235→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "226.8 cm\u00b3" },
+   236→    ],
+   237→  },
+   238→  "ismb-225x110": {
+   239→    title: "ISMB 225x110 Beam", category: "ms-beam", categoryName: "MS Beam",
+   240→    description: "Extra-heavy beam for high-rise construction, crane gantries, and heavy-load applications.",
+   241→    specifications: [
+   242→      { key: "Section", value: "225 x 110mm" }, { key: "Weight", value: "26.9 kg/m" },
+   243→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   244→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "315.0 cm\u00b3" },
+   245→    ],
+   246→  },
+   247→  "ismb-250x125": {
+   248→    title: "ISMB 250x125 Beam", category: "ms-beam", categoryName: "MS Beam",
+   249→    description: "Large I-beam for factories, warehouses, stadiums, and infrastructure projects.",
+   250→    specifications: [
+   251→      { key: "Section", value: "250 x 125mm" }, { key: "Weight", value: "37.3 kg/m" },
+   252→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   253→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "587.0 cm\u00b3" },
+   254→    ],
+   255→  },
+   256→  "ismb-300x140": {
+   257→    title: "ISMB 300x140 Beam", category: "ms-beam", categoryName: "MS Beam",
+   258→    description: "Jumbo beam for large-span roofs, heavy industrial plants, and major infrastructure.",
+   259→    specifications: [
+   260→      { key: "Section", value: "300 x 140mm" }, { key: "Weight", value: "46.1 kg/m" },
+   261→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   262→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "879.0 cm\u00b3" },
+   263→    ],
+   264→  },
+   265→  "ismb-350x140": {
+   266→    title: "ISMB 350x140 Beam", category: "ms-beam", categoryName: "MS Beam",
+   267→    description: "Heavy jumbo beam for bridges, flyovers, and large-scale infrastructure. Maximum strength for the most demanding structural steel requirements.",
+   268→    specifications: [
+   269→      { key: "Section", value: "350 x 140mm" }, { key: "Weight", value: "52.4 kg/m" },
+   270→      { key: "Grade", value: "IS 2062 E410" }, { key: "Standard", value: "IS 808" },
+   271→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "1198.0 cm\u00b3" },
+   272→    ],
+   273→  },
+   274→  "ismb-400x140": {
+   275→    title: "ISMB 400x140 Beam", category: "ms-beam", categoryName: "MS Beam",
+   276→    description: "Extra-jumbo beam for mega projects, port structures, and heavy industrial complexes. The largest standard I-beam section in our range.",
+   277→    specifications: [
+   278→      { key: "Section", value: "400 x 140mm" }, { key: "Weight", value: "61.6 kg/m" },
+   279→      { key: "Grade", value: "IS 2062 E410 / E450" }, { key: "Standard", value: "IS 808" },
+   280→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "1556.0 cm\u00b3" },
+   281→    ],
+   282→  },
+   283→
+   284→  "ismc-75x40": {
+   285→    title: "ISMC 75x40 Channel", category: "ms-channel", categoryName: "MS Channel",
+   286→    description: "Light channel section for cable trays, light structural framing, and secondary supports.",
+   287→    specifications: [
+   288→      { key: "Section", value: "75 x 40mm" }, { key: "Weight", value: "7.14 kg/m" },
+   289→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   290→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "28.8 cm\u00b3" },
+   291→    ],
+   292→  },
+   293→  "ismc-100x50": {
+   294→    title: "ISMC 100x50 Channel", category: "ms-channel", categoryName: "MS Channel",
+   295→    description: "Standard channel for roof purlins, structural supports, and building frames.",
+   296→    specifications: [
+   297→      { key: "Section", value: "100 x 50mm" }, { key: "Weight", value: "9.56 kg/m" },
+   298→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   299→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "52.4 cm\u00b3" },
+   300→    ],
+   301→  },
+   302→  "ismc-125x65": {
+   303→    title: "ISMC 125x65 Channel", category: "ms-channel", categoryName: "MS Channel",
+   304→    description: "Medium channel for mezzanine floors, building frames, and structural steelwork.",
+   305→    specifications: [
+   306→      { key: "Section", value: "125 x 65mm" }, { key: "Weight", value: "13.1 kg/m" },
+   307→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   308→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "93.5 cm\u00b3" },
+   309→    ],
+   310→  },
+   311→  "ismc-150x75": {
+   312→    title: "ISMC 150x75 Channel", category: "ms-channel", categoryName: "MS Channel",
+   313→    description: "Heavy channel for bridge girders, industrial structures, and crane rails.",
+   314→    specifications: [
+   315→      { key: "Section", value: "150 x 75mm" }, { key: "Weight", value: "16.2 kg/m" },
+   316→      { key: "Grade", value: "IS 2062 E250 / E350 / E410" }, { key: "Standard", value: "IS 808" },
+   317→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "145.0 cm\u00b3" },
+   318→    ],
+   319→  },
+   320→  "ismc-175x75": {
+   321→    title: "ISMC 175x75 Channel", category: "ms-channel", categoryName: "MS Channel",
+   322→    description: "Extra-heavy channel for transmission towers, heavy framing, and industrial plant structures.",
+   323→    specifications: [
+   324→      { key: "Section", value: "175 x 75mm" }, { key: "Weight", value: "19.3 kg/m" },
+   325→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   326→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "198.0 cm\u00b3" },
+   327→    ],
+   328→  },
+   329→  "ismc-200x75": {
+   330→    title: "ISMC 200x75 Channel", category: "ms-channel", categoryName: "MS Channel",
+   331→    description: "Structural channel for heavy machinery foundations, plant structures, and heavy-load applications.",
+   332→    specifications: [
+   333→      { key: "Section", value: "200 x 75mm" }, { key: "Weight", value: "22.3 kg/m" },
+   334→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   335→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "253.0 cm\u00b3" },
+   336→    ],
+   337→  },
+   338→  "ismc-225x80": {
+   339→    title: "ISMC 225x80 Channel", category: "ms-channel", categoryName: "MS Channel",
+   340→    description: "Large channel for infrastructure projects, heavy-duty racking, and structural frames.",
+   341→    specifications: [
+   342→      { key: "Section", value: "225 x 80mm" }, { key: "Weight", value: "26.9 kg/m" },
+   343→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   344→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "338.0 cm\u00b3" },
+   345→    ],
+   346→  },
+   347→  "ismc-250x80": {
+   348→    title: "ISMC 250x80 Channel", category: "ms-channel", categoryName: "MS Channel",
+   349→    description: "Jumbo channel for bridges, docks, heavy construction, and large-scale industrial applications.",
+   350→    specifications: [
+   351→      { key: "Section", value: "250 x 80mm" }, { key: "Weight", value: "30.5 kg/m" },
+   352→      { key: "Grade", value: "IS 2062 E350 / E410 / E450" }, { key: "Standard", value: "IS 808" },
+   353→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "415.0 cm\u00b3" },
+   354→    ],
+   355→  },
+   356→  "ismc-300x90": {
+   357→    title: "ISMC 300x90 Channel", category: "ms-channel", categoryName: "MS Channel",
+   358→    description: "Extra-jumbo channel for the largest industrial projects, heavy plant structures, and critical infrastructure.",
+   359→    specifications: [
+   360→      { key: "Section", value: "300 x 90mm" }, { key: "Weight", value: "36.3 kg/m" },
+   361→      { key: "Grade", value: "IS 2062 E410 / E450" }, { key: "Standard", value: "IS 808" },
+   362→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "537.0 cm\u00b3" },
+   363→    ],
+   364→  },
+   365→  "mc-100x50-light": {
+   366→    title: "MC 100x50 Light Channel", category: "ms-channel", categoryName: "MS Channel",
+   367→    description: "Lightweight channel section for prefab structures, false ceilings, and lightweight framing.",
+   368→    specifications: [
+   369→      { key: "Section", value: "100 x 50mm" }, { key: "Weight", value: "6.8 kg/m" },
+   370→      { key: "Grade", value: "IS 2062 E250" }, { key: "Standard", value: "IS 808" },
+   371→      { key: "Length", value: "6m - 10m" }, { key: "Thickness", value: "4.0mm" },
+   372→    ],
+   373→  },
+   374→
+   375→  "equal-angle-25x25": {
+   376→    title: "Equal Angle 25x25x3mm", category: "ms-angle", categoryName: "MS Angle",
+   377→    description: "Light equal angle for gates, grills, window frames, and light fabrication.",
+   378→    specifications: [
+   379→      { key: "Section", value: "25 x 25 x 3mm" }, { key: "Weight", value: "1.12 kg/m" },
+   380→      { key: "Grade", value: "IS 2062 E250" }, { key: "Standard", value: "IS 808" },
+   381→      { key: "Length", value: "6m - 12m" }, { key: "Surface", value: "Black / Bright" },
+   382→    ],
+   383→  },
+   384→  "equal-angle-30x30": {
+   385→    title: "Equal Angle 30x30x3mm", category: "ms-angle", categoryName: "MS Angle",
+   386→    description: "Small angle for brackets, light supports, railing frames, and general fabrication.",
+   387→    specifications: [
+   388→      { key: "Section", value: "30 x 30 x 3mm" }, { key: "Weight", value: "1.36 kg/m" },
+   389→      { key: "Grade", value: "IS 2062 E250" }, { key: "Standard", value: "IS 808" },
+   390→      { key: "Length", value: "6m - 12m" }, { key: "Tolerances", value: "IS 1852" },
+   391→    ],
+   392→  },
+   393→  "equal-angle-40x40": {
+   394→    title: "Equal Angle 40x40x5mm", category: "ms-angle", categoryName: "MS Angle",
+   395→    description: "Medium angle for structural frames, towers, and general construction.",
+   396→    specifications: [
+   397→      { key: "Section", value: "40 x 40 x 5mm" }, { key: "Weight", value: "2.97 kg/m" },
+   398→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   399→      { key: "Length", value: "6m - 12m" }, { key: "Elongation", value: "Min 28%" },
+   400→    ],
+   401→  },
+   402→  "equal-angle-45x45": {
+   403→    title: "Equal Angle 45x45x5mm", category: "ms-angle", categoryName: "MS Angle",
+   404→    description: "Standard angle for building frames, rack structures, and support brackets.",
+   405→    specifications: [
+   406→      { key: "Section", value: "45 x 45 x 5mm" }, { key: "Weight", value: "3.38 kg/m" },
+   407→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   408→      { key: "Length", value: "6m - 12m" }, { key: "Yield Strength", value: "Min 250 MPa" },
+   409→    ],
+   410→  },
+   411→  "equal-angle-50x50": {
+   412→    title: "Equal Angle 50x50x5mm", category: "ms-angle", categoryName: "MS Angle",
+   413→    description: "Multi-purpose equal angle for structural, fabrication, and general construction work.",
+   414→    specifications: [
+   415→      { key: "Section", value: "50 x 50 x 5mm" }, { key: "Weight", value: "3.77 kg/m" },
+   416→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   417→      { key: "Length", value: "6m - 12m" }, { key: "Tensile Strength", value: "410 - 540 MPa" },
+   418→    ],
+   419→  },
+   420→  "equal-angle-55x55": {
+   421→    title: "Equal Angle 55x55x6mm", category: "ms-angle", categoryName: "MS Angle",
+   422→    description: "Heavy angle for transmission towers, industrial sheds, and heavy structural frames.",
+   423→    specifications: [
+   424→      { key: "Section", value: "55 x 55 x 6mm" }, { key: "Weight", value: "5.05 kg/m" },
+   425→      { key: "Grade", value: "IS 2062 E350" }, { key: "Standard", value: "IS 808" },
+   426→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "7.92 cm\u00b3" },
+   427→    ],
+   428→  },
+   429→  "equal-angle-60x60": {
+   430→    title: "Equal Angle 60x60x6mm", category: "ms-angle", categoryName: "MS Angle",
+   431→    description: "Structural angle for bridges, trusses, heavy frames, and industrial construction.",
+   432→    specifications: [
+   433→      { key: "Section", value: "60 x 60 x 6mm" }, { key: "Weight", value: "5.52 kg/m" },
+   434→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   435→      { key: "Length", value: "6m - 12m" }, { key: "Carbon Content", value: "Max 0.23%" },
+   436→    ],
+   437→  },
+   438→  "equal-angle-65x65": {
+   439→    title: "Equal Angle 65x65x6mm", category: "ms-angle", categoryName: "MS Angle",
+   440→    description: "Extra-heavy angle for heavy structural applications, industrial plant structures, and large fabrication works.",
+   441→    specifications: [
+   442→      { key: "Section", value: "65 x 65 x 6mm" }, { key: "Weight", value: "6.01 kg/m" },
+   443→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   444→      { key: "Length", value: "6m - 12m" }, { key: "Elongation", value: "Min 23%" },
+   445→    ],
+   446→  },
+   447→  "equal-angle-75x75": {
+   448→    title: "Equal Angle 75x75x6mm", category: "ms-angle", categoryName: "MS Angle",
+   449→    description: "Heavy-duty angle for towers, cranes, heavy equipment, and infrastructure projects.",
+   450→    specifications: [
+   451→      { key: "Section", value: "75 x 75 x 6mm" }, { key: "Weight", value: "6.78 kg/m" },
+   452→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   453→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "13.15 cm\u00b3" },
+   454→    ],
+   455→  },
+   456→  "equal-angle-80x80": {
+   457→    title: "Equal Angle 80x80x8mm", category: "ms-angle", categoryName: "MS Angle",
+   458→    description: "Jumbo angle for large infrastructure, industrial frames, and heavy construction.",
+   459→    specifications: [
+   460→      { key: "Section", value: "80 x 80 x 8mm" }, { key: "Weight", value: "9.61 kg/m" },
+   461→      { key: "Grade", value: "IS 2062 E410" }, { key: "Standard", value: "IS 808" },
+   462→      { key: "Length", value: "6m - 12m" }, { key: "Yield Strength", value: "Min 410 MPa" },
+   463→    ],
+   464→  },
+   465→  "equal-angle-90x90": {
+   466→    title: "Equal Angle 90x90x8mm", category: "ms-angle", categoryName: "MS Angle",
+   467→    description: "Extra-jumbo angle for heavy bridges, port structures, and large-scale infrastructure.",
+   468→    specifications: [
+   469→      { key: "Section", value: "90 x 90 x 8mm" }, { key: "Weight", value: "10.88 kg/m" },
+   470→      { key: "Grade", value: "IS 2062 E410 / E450" }, { key: "Standard", value: "IS 808" },
+   471→      { key: "Length", value: "6m - 12m" }, { key: "UT Certification", value: "Available" },
+   472→    ],
+   473→  },
+   474→  "equal-angle-100x100": {
+   475→    title: "Equal Angle 100x100x10mm", category: "ms-angle", categoryName: "MS Angle",
+   476→    description: "Ultra-heavy angle for mega construction, defence projects, and extreme heavy engineering.",
+   477→    specifications: [
+   478→      { key: "Section", value: "100 x 100 x 10mm" }, { key: "Weight", value: "15.0 kg/m" },
+   479→      { key: "Grade", value: "IS 2062 E450" }, { key: "Standard", value: "IS 808" },
+   480→      { key: "Length", value: "6m - 12m" }, { key: "Heat Number", value: "Fully Traceable" },
+   481→    ],
+   482→  },
+   483→  "unequal-angle-75x50": {
+   484→    title: "Unequal Angle 75x50x6mm", category: "ms-angle", categoryName: "MS Angle",
+   485→    description: "Unequal leg angle for specialized structural and fabrication applications.",
+   486→    specifications: [
+   487→      { key: "Section", value: "75 x 50 x 6mm" }, { key: "Weight", value: "5.65 kg/m" },
+   488→      { key: "Grade", value: "IS 2062 E250 / E350" }, { key: "Standard", value: "IS 808" },
+   489→      { key: "Length", value: "6m - 12m" }, { key: "Application", value: "Asymmetric loads" },
+   490→    ],
+   491→  },
+   492→  "unequal-angle-100x75": {
+   493→    title: "Unequal Angle 100x75x8mm", category: "ms-angle", categoryName: "MS Angle",
+   494→    description: "Heavy unequal angle for asymmetrical load-bearing structures, special frames, and customized structural steelwork.",
+   495→    specifications: [
+   496→      { key: "Section", value: "100 x 75 x 8mm" }, { key: "Weight", value: "10.4 kg/m" },
+   497→      { key: "Grade", value: "IS 2062 E350 / E410" }, { key: "Standard", value: "IS 808" },
+   498→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "27.8 cm\u00b3 (X-X)" },
+   499→    ],
+   500→  },
+   501→
+   502→  "ms-round-6mm": {
+   503→    title: "MS Round Bar 6mm", category: "ms-round", categoryName: "MS Round",
+   504→    description: "Thin round bar for pins, rivets, light machining, and small fasteners.",
+   505→    specifications: [
+   506→      { key: "Diameter", value: "6mm" }, { key: "Weight", value: "0.22 kg/m" },
+   507→      { key: "Grade", value: "IS 2062 E250 / EN8" }, { key: "Finish", value: "Bright / Black" },
+   508→      { key: "Length", value: "3m - 6m" }, { key: "Tolerance", value: "IS 1852" },
+   509→    ],
+   510→  },
+   511→  "ms-round-8mm": {
+   512→    title: "MS Round Bar 8mm", category: "ms-round", categoryName: "MS Round",
+   513→    description: "Small diameter bar for bolts, studs, general fasteners, and light engineering works.",
+   514→    specifications: [
+   515→      { key: "Diameter", value: "8mm" }, { key: "Weight", value: "0.39 kg/m" },
+   516→      { key: "Grade", value: "IS 2062 E250 / EN8" }, { key: "Finish", value: "Bright / Black" },
+   517→      { key: "Length", value: "3m - 6m" }, { key: "Tensile Strength", value: "410 MPa" },
+   518→    ],
+   519→  },
+   520→  "ms-round-10mm": {
+   521→    title: "MS Round Bar 10mm", category: "ms-round", categoryName: "MS Round",
+   522→    description: "Standard round bar for shafts, axles, engineering components, and general machining.",
+   523→    specifications: [
+   524→      { key: "Diameter", value: "10mm" }, { key: "Weight", value: "0.62 kg/m" },
+   525→      { key: "Grade", value: "IS 2062 E250 / EN8 / EN9" }, { key: "Finish", value: "Bright / Black" },
+   526→      { key: "Length", value: "3m - 6m" }, { key: "Yield Strength", value: "Min 250 MPa" },
+   527→    ],
+   528→  },
+   529→  "ms-round-12mm": {
+   530→    title: "MS Round Bar 12mm", category: "ms-round", categoryName: "MS Round",
+   531→    description: "Medium round for machine components, structural ties, dowels, and turned parts.",
+   532→    specifications: [
+   533→      { key: "Diameter", value: "12mm" }, { key: "Weight", value: "0.89 kg/m" },
+   534→      { key: "Grade", value: "IS 2062 E250 / EN8 / EN9" }, { key: "Finish", value: "Bright / Black" },
+   535→      { key: "Length", value: "3m - 6m" }, { key: "Elongation", value: "Min 28%" },
+   536→    ],
+   537→  },
+   538→  "ms-round-16mm": {
+   539→    title: "MS Round Bar 16mm", category: "ms-round", categoryName: "MS Round",
+   540→    description: "Industrial round for forging, coupling, heavy machining, and structural applications.",
+   541→    specifications: [
+   542→      { key: "Diameter", value: "16mm" }, { key: "Weight", value: "1.58 kg/m" },
+   543→      { key: "Grade", value: "IS 2062 E250 / E350 / EN8" }, { key: "Finish", value: "Black / Bright" },
+   544→      { key: "Length", value: "3m - 6m" }, { key: "Tensile Strength", value: "490 - 630 MPa" },
+   545→    ],
+   546→  },
+   547→  "ms-round-20mm": {
+   548→    title: "MS Round Bar 20mm", category: "ms-round", categoryName: "MS Round",
+   549→    description: "Heavy round for large shafts, rollers, structural components, and heavy machining.",
+   550→    specifications: [
+   551→      { key: "Diameter", value: "20mm" }, { key: "Weight", value: "2.47 kg/m" },
+   552→      { key: "Grade", value: "IS 2062 E250 / E350 / EN8 / EN9" }, { key: "Finish", value: "Black / Bright" },
+   553→      { key: "Length", value: "3m - 6m" }, { key: "Surface", value: "Ground / Turned" },
+   554→    ],
+   555→  },
+   556→  "ms-round-25mm": {
+   557→    title: "MS Round Bar 25mm", category: "ms-round", categoryName: "MS Round",
+   558→    description: "Thick round for heavy forging, anchors, stabilizers, and large engineering components.",
+   559→    specifications: [
+   560→      { key: "Diameter", value: "25mm" }, { key: "Weight", value: "3.85 kg/m" },
+   561→      { key: "Grade", value: "IS 2062 E350 / EN8 / EN9 / EN19" }, { key: "Finish", value: "Black / Bright" },
+   562→      { key: "Length", value: "3m - 6m" }, { key: "Carbon Content", value: "0.15 - 0.45%" },
+   563→    ],
+   564→  },
+   565→  "ms-round-32mm": {
+   566→    title: "MS Round Bar 32mm", category: "ms-round", categoryName: "MS Round",
+   567→    description: "Extra-heavy round for heavy machinery, marine applications, and large structural parts.",
+   568→    specifications: [
+   569→      { key: "Diameter", value: "32mm" }, { key: "Weight", value: "6.31 kg/m" },
+   570→      { key: "Grade", value: "IS 2062 E350 / EN8 / EN9 / EN19" }, { key: "Finish", value: "Black" },
+   571→      { key: "Length", value: "3m - 6m" }, { key: "Yield Strength", value: "Min 350 MPa" },
+   572→    ],
+   573→  },
+   574→  "ms-round-36mm": {
+   575→    title: "MS Round Bar 36mm", category: "ms-round", categoryName: "MS Round",
+   576→    description: "Jumbo round for large-scale engineering, structural supports, and heavy industrial components.",
+   577→    specifications: [
+   578→      { key: "Diameter", value: "36mm" }, { key: "Weight", value: "7.99 kg/m" },
+   579→      { key: "Grade", value: "IS 2062 E350 / EN8 / EN9 / EN19" }, { key: "Finish", value: "Black" },
+   580→      { key: "Length", value: "3m - 6m" }, { key: "Tensile Strength", value: "540 - 680 MPa" },
+   581→    ],
+   582→  },
+   583→  "ms-round-40mm": {
+   584→    title: "MS Round Bar 40mm", category: "ms-round", categoryName: "MS Round",
+   585→    description: "Ultra-heavy round for presses, rams, heavy equipment shafts, and large forgings.",
+   586→    specifications: [
+   587→      { key: "Diameter", value: "40mm" }, { key: "Weight", value: "9.86 kg/m" },
+   588→      { key: "Grade", value: "IS 2062 E350 / E410 / EN8 / EN9 / EN19" }, { key: "Finish", value: "Black" },
+   589→      { key: "Length", value: "3m - 6m" }, { key: "UT Certification", value: "Available" },
+   590→    ],
+   591→  },
+   592→  "ms-round-50mm": {
+   593→    title: "MS Round Bar 50mm", category: "ms-round", categoryName: "MS Round",
+   594→    description: "Extra-jumbo round for hydraulic cylinders, heavy shafts, large forgings, and marine applications.",
+   595→    specifications: [
+   596→      { key: "Diameter", value: "50mm" }, { key: "Weight", value: "15.42 kg/m" },
+   597→      { key: "Grade", value: "IS 2062 E410 / EN8 / EN9 / EN19" }, { key: "Finish", value: "Black / Forged" },
+   598→      { key: "Length", value: "3m - 6m" }, { key: "Hardness", value: "As rolled / Normalized" },
+   599→    ],
+   600→  },
+   601→  "ms-round-60mm": {
+   602→    title: "MS Round Bar 60mm", category: "ms-round", categoryName: "MS Round",
+   603→    description: "Super-heavy round for industrial rollers, large forgings, and heavy engineering.",
+   604→    specifications: [
+   605→      { key: "Diameter", value: "60mm" }, { key: "Weight", value: "22.2 kg/m" },
+   606→      { key: "Grade", value: "IS 2062 E410 / EN8 / EN9 / EN19" }, { key: "Finish", value: "Black" },
+   607→      { key: "Length", value: "3m - 6m" }, { key: "Heat Number Traceability", value: "Available" },
+   608→    ],
+   609→  },
+   610→  "ms-round-75mm": {
+   611→    title: "MS Round Bar 75mm", category: "ms-round", categoryName: "MS Round",
+   612→    description: "Massive round for naval, defence, and heavy infrastructure applications.",
+   613→    specifications: [
+   614→      { key: "Diameter", value: "75mm" }, { key: "Weight", value: "34.7 kg/m" },
+   615→      { key: "Grade", value: "IS 2062 E410 / E450 / EN19" }, { key: "Finish", value: "Black / Forged" },
+   616→      { key: "Length", value: "3m - 6m" }, { key: "Mill Certification", value: "Available" },
+   617→    ],
+   618→  },
+   619→  "ms-round-100mm": {
+   620→    title: "MS Round Bar 100mm", category: "ms-round", categoryName: "MS Round",
+   621→    description: "Jumbo round for heavy engineering, mega infrastructure projects, and defence applications.",
+   622→    specifications: [
+   623→      { key: "Diameter", value: "100mm" }, { key: "Weight", value: "61.7 kg/m" },
+   624→      { key: "Grade", value: "IS 2062 E450 / EN19 / EN24" }, { key: "Finish", value: "Black / Forged" },
+   625→      { key: "Length", value: "3m - 6m" }, { key: "Full Traceability", value: "Mill TC Available" },
+   626→    ],
+   627→  },
+   628→
+   629→  "gp-pipe-half-inch": {
+   630→    title: "GP Pipe 1/2 inch Medium", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   631→    description: "Light galvanized pipe for handrails, furniture, small plumbing, and electrical conduits.",
+   632→    specifications: [
+   633→      { key: "Size", value: "1/2 inch (15mm NB)" }, { key: "Thickness", value: "2.65mm (Medium)" },
+   634→      { key: "Grade", value: "IS 1239" }, { key: "Type", value: "Galvanized (GP)" },
+   635→      { key: "Length", value: "6m" }, { key: "Threading", value: "Both ends threaded / Plain" },
+   636→    ],
+   637→  },
+   638→  "gp-pipe-3quarter-inch": {
+   639→    title: "GP Pipe 3/4 inch Medium", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   640→    description: "Standard galvanized pipe for domestic plumbing, water supply lines, and light structural handrails.",
+   641→    specifications: [
+   642→      { key: "Size", value: "3/4 inch (20mm NB)" }, { key: "Thickness", value: "2.65mm (Medium)" },
+   643→      { key: "Grade", value: "IS 1239" }, { key: "Type", value: "Galvanized (GP)" },
+   644→      { key: "Length", value: "6m" }, { key: "Test Pressure", value: "5 kg/cm\u00b2" },
+   645→    ],
+   646→  },
+   647→  "gp-pipe-1inch": {
+   648→    title: "GP Pipe 1 inch Heavy", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   649→    description: "Heavy-duty galvanized pipe for water lines, structural handrails, scaffolding, and industrial applications.",
+   650→    specifications: [
+   651→      { key: "Size", value: "1 inch (25mm NB)" }, { key: "Thickness", value: "3.25mm (Heavy)" },
+   652→      { key: "Grade", value: "IS 1239" }, { key: "Type", value: "Galvanized (GP)" },
+   653→      { key: "Length", value: "6m" }, { key: "Weight", value: "2.49 kg/m" },
+   654→    ],
+   655→  },
+   656→  "gp-pipe-1-25inch": {
+   657→    title: "GP Pipe 1.25 inch Medium", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   658→    description: "Medium galvanized pipe for garden watering, light structural use, and industrial fluid handling.",
+   659→    specifications: [
+   660→      { key: "Size", value: "1.25 inch (32mm NB)" }, { key: "Thickness", value: "3.25mm (Medium)" },
+   661→      { key: "Grade", value: "IS 1239" }, { key: "Type", value: "Galvanized (GP)" },
+   662→      { key: "Length", value: "6m" }, { key: "Surface", value: "Hot Dip Galvanized" },
+   663→    ],
+   664→  },
+   665→  "gp-pipe-1-5inch": {
+   666→    title: "GP Pipe 1.5 inch Heavy", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   667→    description: "Heavy-duty galvanized pipe for scaffolding, water mains, and industrial applications.",
+   668→    specifications: [
+   669→      { key: "Size", value: "1.5 inch (40mm NB)" }, { key: "Thickness", value: "3.25mm (Heavy)" },
+   670→      { key: "Grade", value: "IS 1239" }, { key: "Type", value: "Galvanized (GP)" },
+   671→      { key: "Length", value: "6m" }, { key: "Weight", value: "3.55 kg/m" },
+   672→    ],
+   673→  },
+   674→  "erw-pipe-2inch": {
+   675→    title: "ERW Pipe 2 inch Medium", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   676→    description: "ERW steel pipe for plumbing, scaffolding, structural columns, and general piping.",
+   677→    specifications: [
+   678→      { key: "Size", value: "2 inch (50mm NB)" }, { key: "Thickness", value: "3.25mm / 4.0mm" },
+   679→      { key: "Grade", value: "IS 1239 / IS 1161" }, { key: "Type", value: "ERW (Black)" },
+   680→      { key: "Length", value: "6m - 12m" }, { key: "Ends", value: "Plain / Beveled / Threaded" },
+   681→    ],
+   682→  },
+   683→  "erw-pipe-2-5inch": {
+   684→    title: "ERW Pipe 2.5 inch Heavy", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   685→    description: "Heavy ERW pipe for industrial water supply, structural applications, and high-pressure lines.",
+   686→    specifications: [
+   687→      { key: "Size", value: "2.5 inch (65mm NB)" }, { key: "Thickness", value: "4.0mm / 5.0mm" },
+   688→      { key: "Grade", value: "IS 1161 / IS 3589" }, { key: "Type", value: "ERW (Black)" },
+   689→      { key: "Length", value: "6m - 12m" }, { key: "Test Pressure", value: "15 kg/cm\u00b2" },
+   690→    ],
+   691→  },
+   692→  "erw-pipe-3inch": {
+   693→    title: "ERW Pipe 3 inch Heavy", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   694→    description: "Large ERW pipe for fire mains, piling, heavy structures, and industrial piping systems.",
+   695→    specifications: [
+   696→      { key: "Size", value: "3 inch (80mm NB)" }, { key: "Thickness", value: "4.5mm / 5.0mm / 6.0mm" },
+   697→      { key: "Grade", value: "IS 1161 / IS 3589" }, { key: "Type", value: "ERW (Black)" },
+   698→      { key: "Length", value: "6m - 12m" }, { key: "Schedule", value: "SCH40 / SCH80" },
+   699→    ],
+   700→  },
+   701→  "erw-pipe-4inch": {
+   702→    title: "ERW Pipe 4 inch Heavy", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   703→    description: "Extra-heavy ERW pipe for gas lines, industrial processing, and critical structural support.",
+   704→    specifications: [
+   705→      { key: "Size", value: "4 inch (100mm NB)" }, { key: "Thickness", value: "4.5mm / 6.0mm / 8.0mm" },
+   706→      { key: "Grade", value: "IS 1161 / IS 3589 / API 5L" }, { key: "Type", value: "ERW (Black)" },
+   707→      { key: "Length", value: "6m - 12m" }, { key: "Hydrostatic Test", value: "Available" },
+   708→    ],
+   709→  },
+   710→  "erw-pipe-5inch": {
+   711→    title: "ERW Pipe 5 inch Heavy", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   712→    description: "Jumbo ERW pipe for large-diameter water mains, sewerage systems, and industrial process piping.",
+   713→    specifications: [
+   714→      { key: "Size", value: "5 inch (125mm NB)" }, { key: "Thickness", value: "5.0mm / 6.0mm / 8.0mm" },
+   715→      { key: "Grade", value: "IS 3589 / IS 1161" }, { key: "Type", value: "ERW (Black)" },
+   716→      { key: "Length", value: "6m - 12m" }, { key: "Coating", value: "Black / Anti-corrosive" },
+   717→    ],
+   718→  },
+   719→  "erw-pipe-6inch": {
+   720→    title: "ERW Pipe 6 inch Heavy", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   721→    description: "Super-heavy ERW pipe for piling, large infrastructure, and heavy industrial applications.",
+   722→    specifications: [
+   723→      { key: "Size", value: "6 inch (150mm NB)" }, { key: "Thickness", value: "5.0mm / 6.0mm / 8.0mm / 10.0mm" },
+   724→      { key: "Grade", value: "IS 3589 / IS 1161 / API 5L" }, { key: "Type", value: "ERW (Black)" },
+   725→      { key: "Length", value: "6m - 12m" }, { key: "NDT Testing", value: "Available" },
+   726→    ],
+   727→  },
+   728→  "seamless-pipe-2inch": {
+   729→    title: "Seamless Pipe 2 inch SCH40", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   730→    description: "Seamless pipe for high-pressure applications, boilers, and critical service.",
+   731→    specifications: [
+   732→      { key: "Size", value: "2 inch (50mm NB)" }, { key: "Schedule", value: "SCH40 (3.91mm)" },
+   733→      { key: "Grade", value: "IS 1978 / API 5L Gr.B / ASTM A106" }, { key: "Type", value: "Seamless (Black)" },
+   734→      { key: "Length", value: "6m - 12m" }, { key: "Application", value: "High pressure / Boiler" },
+   735→    ],
+   736→  },
+   737→  "seamless-pipe-3inch": {
+   738→    title: "Seamless Pipe 3 inch SCH80", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   739→    description: "Heavy seamless pipe for oil & gas, chemical processing, and critical high-pressure services.",
+   740→    specifications: [
+   741→      { key: "Size", value: "3 inch (80mm NB)" }, { key: "Schedule", value: "SCH80 (7.62mm)" },
+   742→      { key: "Grade", value: "API 5L Gr.B / ASTM A106 Gr.B / IS 1978" }, { key: "Type", value: "Seamless (Black)" },
+   743→      { key: "Length", value: "6m - 12m" }, { key: "Heat Treatment", value: "Normalized" },
+   744→    ],
+   745→  },
+   746→  "seamless-pipe-4inch": {
+   747→    title: "Seamless Pipe 4 inch SCH40", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   748→    description: "Large seamless pipe for industrial process piping, high-pressure steam lines, and critical fluid handling.",
+   749→    specifications: [
+   750→      { key: "Size", value: "4 inch (100mm NB)" }, { key: "Schedule", value: "SCH40 (6.02mm)" },
+   751→      { key: "Grade", value: "API 5L Gr.B / ASTM A106 Gr.B / IS 1978" }, { key: "Type", value: "Seamless (Black)" },
+   752→      { key: "Length", value: "6m - 12m" }, { key: "Certification", value: "3.1 Mill TC" },
+   753→    ],
+   754→  },
+   755→  "ms-square-pipe-40x40": {
+   756→    title: "MS Square Pipe 40x40mm", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   757→    description: "Square hollow section for gates, frames, structures, and general fabrication.",
+   758→    specifications: [
+   759→      { key: "Section", value: "40 x 40mm" }, { key: "Thickness", value: "2.0mm / 2.5mm / 3.0mm" },
+   760→      { key: "Grade", value: "IS 4923 / IS 1161" }, { key: "Type", value: "ERW / Cold Formed" },
+   761→      { key: "Length", value: "6m - 12m" }, { key: "Surface", value: "Black / Painted" },
+   762→    ],
+   763→  },
+   764→  "ms-square-pipe-50x50": {
+   765→    title: "MS Square Pipe 50x50mm", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   766→    description: "Heavy square section for columns, towers, trusses, and structural steelwork.",
+   767→    specifications: [
+   768→      { key: "Section", value: "50 x 50mm" }, { key: "Thickness", value: "2.5mm / 3.0mm / 4.0mm" },
+   769→      { key: "Grade", value: "IS 4923 / IS 1161" }, { key: "Type", value: "ERW / Cold Formed" },
+   770→      { key: "Length", value: "6m - 12m" }, { key: "Weight (3mm)", value: "4.34 kg/m" },
+   771→    ],
+   772→  },
+   773→  "ms-rect-pipe-50x25": {
+   774→    title: "MS Rectangular Pipe 50x25mm", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   775→    description: "Rectangular hollow section for handrails, balustrades, furniture, and light fabrication.",
+   776→    specifications: [
+   777→      { key: "Section", value: "50 x 25mm" }, { key: "Thickness", value: "2.0mm / 2.5mm / 3.0mm" },
+   778→      { key: "Grade", value: "IS 4923 / IS 1161" }, { key: "Type", value: "Cold Formed (ERW)" },
+   779→      { key: "Length", value: "6m - 12m" }, { key: "Surface", value: "Black / Galvanized" },
+   780→    ],
+   781→  },
+   782→  "ms-rect-pipe-80x40": {
+   783→    title: "MS Rectangular Pipe 80x40mm", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   784→    description: "Large rectangular section for structural frames, supports, and heavy-fabrication.",
+   785→    specifications: [
+   786→      { key: "Section", value: "80 x 40mm" }, { key: "Thickness", value: "2.5mm / 3.0mm / 4.0mm / 5.0mm" },
+   787→      { key: "Grade", value: "IS 4923 / IS 1161" }, { key: "Type", value: "Cold Formed (ERW)" },
+   788→      { key: "Length", value: "6m - 12m" }, { key: "Section Modulus", value: "23.77 cm\u00b3 (X-X)" },
+   789→    ],
+   790→  },
+   791→  "ms-rect-pipe-100x50": {
+   792→    title: "MS Rectangular Pipe 100x50mm", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   793→    description: "Jumbo rectangular section for heavy structural applications, portal frames, and large-span supports.",
+   794→    specifications: [
+   795→      { key: "Section", value: "100 x 50mm" }, { key: "Thickness", value: "3.0mm / 4.0mm / 5.0mm / 6.0mm" },
+   796→      { key: "Grade", value: "IS 4923 / IS 1161" }, { key: "Type", value: "Cold Formed (ERW)" },
+   797→      { key: "Length", value: "6m - 12m" }, { key: "Weight (4mm)", value: "8.95 kg/m" },
+   798→    ],
+   799→  },
+   800→  "ms-square-pipe-100x100": {
+   801→    title: "MS Square Pipe 100x100mm", category: "ms-hollow-pipes", categoryName: "MS Hollow Pipes",
+   802→    description: "Extra-jumbo square section for large columns, towers, heavy industrial structures, and infrastructure projects.",
+   803→    specifications: [
+   804→      { key: "Section", value: "100 x 100mm" }, { key: "Thickness", value: "3.0mm / 4.0mm / 5.0mm / 6.0mm / 8.0mm" },
+   805→      { key: "Grade", value: "IS 4923 / IS 1161" }, { key: "Type", value: "Cold Formed / Hot Finished" },
+   806→      { key: "Length", value: "6m - 12m" }, { key: "Weight (5mm)", value: "14.9 kg/m" },
+   807→    ],
+   808→  },
+   809→}
+   810→

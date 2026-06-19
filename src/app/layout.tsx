@@ -14,24 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "OMKARA COMMERCIAL PVT. LTD. - Premium MS Steel Products | Iron & Steel Trading | Howrah",
+  description:
+    "OMKARA COMMERCIAL PVT. LTD. - Howrah-based iron and steel traders. We supply high-quality MS Sheet, MS Plate, MS Beam, MS Channel, MS Angle, MS Round, and MS Hollow Pipes for construction and industrial use across India.",
+  keywords:
+    "OMKARA COMMERCIAL, steel traders Howrah, iron and steel West Bengal, ms sheet, ms plate, ms beam, ms channel, ms angle, ms round, ms hollow pipes, steel suppliers, steel trading, SAIL, TATA Steel",
   icons: {
-    icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
-  },
-  openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    icon: "/mini.svg",
   },
 };
 
@@ -43,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
         <Toaster />
