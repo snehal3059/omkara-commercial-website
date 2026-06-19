@@ -25,11 +25,11 @@ interface HomeSectionProps {
 }
 
 const manufacturers = [
-  { name: 'SAIL', fullName: 'Steel Authority of India Limited' },
-  { name: 'TATA Steel', fullName: 'Tata Steel Limited' },
-  { name: 'GAGAN GOLD', fullName: 'Gagan Gold Steel' },
-  { name: 'SHYAM SEL', fullName: 'Shyam Steel Industries' },
-  { name: 'ELEGANT', fullName: 'Elegant Steel' },
+  { name: 'SAIL', logo: '/logo-sail.png' },
+  { name: 'TATA Steel', logo: '/logo-tata-steel.png' },
+  { name: 'GAGAN GOLD', logo: '/logo-gagan-gold.png' },
+  { name: 'SHYAM METALLICS', logo: '/logo-shyam-metallics.png' },
+  { name: 'ELEGANT', logo: '/logo-elegant.png' },
 ]
 
 const productCategories = [
@@ -216,24 +216,21 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
       </section>
 
       {/* ─── 2. Manufacturer Logos ─── */}
-      <section className="bg-background py-12 sm:py-16 border-b border-stone-100">
+      <section className="bg-background py-14 sm:py-20 border-b border-stone-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-8 text-center text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
-            Authorized Distributor for India&apos;s Premier Manufacturers
-          </p>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 lg:gap-16">
             {manufacturers.map((mfr) => (
               <div
                 key={mfr.name}
-                className="flex items-center gap-3 px-5 py-4 rounded-xl border border-stone-100 bg-white hover:border-stone-300 hover:shadow-sm transition-all group"
+                className="flex items-center justify-center h-16 sm:h-20 w-auto opacity-70 hover:opacity-100 transition-opacity duration-300"
               >
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-stone-900 text-sm font-bold text-white shrink-0 group-hover:bg-primary transition-colors">
-                  {mfr.name.charAt(0)}
-                </div>
-                <div className="min-w-0">
-                  <p className="text-sm font-bold text-stone-900 truncate">{mfr.name}</p>
-                  <p className="hidden sm:block text-[11px] text-stone-400 truncate">{mfr.fullName}</p>
-                </div>
+                <Image
+                  src={mfr.logo}
+                  alt={mfr.name}
+                  width={160}
+                  height={64}
+                  className="h-full w-auto object-contain"
+                />
               </div>
             ))}
           </div>

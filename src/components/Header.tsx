@@ -45,7 +45,7 @@ export function Header({ activePage, onNavigate }: HeaderProps) {
             </a>
           </div>
           <p className="text-center sm:text-left text-[11px] tracking-wide">
-            Howrah, West Bengal &middot; Est. 2008 &middot; Authorized SAIL &amp; TATA Steel Distributor
+            Howrah, West Bengal &middot; Est. 2008
           </p>
           <a
             href="https://wa.me/919123857784"
