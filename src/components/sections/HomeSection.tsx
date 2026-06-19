@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+import Image from 'next/image'
 import {
   BadgeCheck,
   Clock,
@@ -14,6 +15,9 @@ import {
   Calculator,
   BookOpen,
   MessageCircle,
+  Zap,
+  TrendingUp,
+  Truck,
 } from 'lucide-react'
 
 interface HomeSectionProps {
@@ -29,35 +33,39 @@ const manufacturers = [
 ]
 
 const productCategories = [
-  { name: 'MS Sheet', icon: '📄', description: 'Mild steel sheets in various thicknesses and sizes' },
-  { name: 'MS Plate', icon: '🛡️', description: 'Heavy-duty mild steel plates for structural use' },
-  { name: 'MS Beam', icon: '🏗️', description: 'I-beams and H-beams for construction frameworks' },
-  { name: 'MS Channel', icon: '📐', description: 'C-channel and U-channel for support structures' },
-  { name: 'MS Angle', icon: '📐', description: 'L-shaped angles for fabrication and construction' },
-  { name: 'MS Round', icon: '⭕', description: 'Round bars and rods for diverse applications' },
-  { name: 'MS Hollow Pipes', icon: '🔧', description: 'Square, rectangular, and round hollow sections' },
+  { name: 'MS Sheet', image: '/ms-sheet.jpg', description: 'Cold rolled & hot rolled sheets in various thicknesses', slug: 'ms-sheet' },
+  { name: 'MS Plate', image: '/ms-plate.jpg', description: 'Heavy-duty mild steel plates for structural use', slug: 'ms-plate' },
+  { name: 'MS Beam', image: '/ms-beam.jpg', description: 'I-beams and H-beams for construction frameworks', slug: 'ms-beam' },
+  { name: 'MS Channel', image: '/ms-channel.jpg', description: 'C-channel and U-channel for support structures', slug: 'ms-channel' },
+  { name: 'MS Angle', image: '/ms-angle.jpg', description: 'L-shaped angles for fabrication and construction', slug: 'ms-angle' },
+  { name: 'MS Round', image: '/ms-round.jpg', description: 'Round bars and rods for diverse applications', slug: 'ms-round' },
+  { name: 'MS Hollow Pipes', image: '/ms-pipes.jpg', description: 'Square, rectangular, and round hollow sections', slug: 'ms-hollow-pipes' },
 ]
 
 const whyChooseUs = [
   {
     icon: BadgeCheck,
-    title: 'Premium Quality',
-    description: 'All products sourced directly from top manufacturers like SAIL and TATA Steel with mill test certificates.',
+    title: 'Certified Quality',
+    description: 'Mill test certificates with every delivery. Products sourced directly from SAIL, TATA Steel and other premium manufacturers.',
+    gradient: 'from-teal-500 to-emerald-600',
   },
   {
     icon: Clock,
-    title: '<48 Hrs Dispatch',
-    description: 'Rapid processing and dispatch from our well-stocked Howrah warehouse to keep your projects on schedule.',
+    title: '48-Hour Dispatch',
+    description: 'Well-stocked Howrah warehouse ensures rapid processing and dispatch to keep your projects running on schedule.',
+    gradient: 'from-amber-500 to-orange-600',
   },
   {
-    icon: ShieldCheck,
-    title: 'Best Pricing',
-    description: 'Competitive wholesale rates with transparent pricing. Bulk order discounts available for all product categories.',
+    icon: TrendingUp,
+    title: 'Competitive Pricing',
+    description: 'Transparent wholesale rates with bulk order discounts. No hidden costs, just honest steel trading since 2008.',
+    gradient: 'from-violet-500 to-purple-600',
   },
   {
     icon: HeadphonesIcon,
-    title: 'Expert Support',
-    description: 'Dedicated team of steel experts to help you choose the right grade, size, and quantity for your needs.',
+    title: 'Expert Guidance',
+    description: 'Dedicated steel specialists help you select the right grade, size, and quantity for every project requirement.',
+    gradient: 'from-rose-500 to-pink-600',
   },
 ]
 
@@ -67,7 +75,7 @@ const testimonials = [
     role: 'Project Head',
     company: 'Ganges Construction',
     location: 'Kolkata, WB',
-    text: 'Omkara Commercial has been our go-to steel supplier for over 5 years. Their consistent quality and on-time delivery have been instrumental in keeping our projects on track. Highly recommended for any construction firm in Eastern India.',
+    text: 'Omkara Commercial has been our go-to steel supplier for over 5 years. Their consistent quality and on-time delivery have been instrumental in keeping our projects on track.',
     rating: 5,
   },
   {
@@ -75,7 +83,7 @@ const testimonials = [
     role: 'Purchase Manager',
     company: 'FabTech Industries',
     location: 'Jamshedpur, JH',
-    text: 'Excellent service and competitive pricing. The team at Omkara understands our requirements perfectly and always delivers exactly what we need. Their product range is comprehensive and quality is never compromised.',
+    text: 'Excellent service and competitive pricing. The team at Omkara understands our requirements perfectly and always delivers exactly what we need.',
     rating: 5,
   },
   {
@@ -83,15 +91,7 @@ const testimonials = [
     role: 'Director',
     company: 'Singh Infrastructure',
     location: 'Patna, BR',
-    text: 'We switched to Omkara Commercial two years ago and it was the best decision. Their dispatch times are unmatched — most orders reach us within 48 hours. The mill test certificates give us complete peace of mind.',
-    rating: 4,
-  },
-  {
-    name: 'Priya Das',
-    role: 'Procurement Lead',
-    company: 'East India Engineering',
-    location: 'Bhubaneswar, OD',
-    text: 'Professional approach, transparent pricing, and a wide range of products. Omkara Commercial has simplified our procurement process significantly. Their expert team helps us select the right specifications every time.',
+    text: 'We switched to Omkara Commercial two years ago and it was the best decision. Their dispatch times are unmatched and the mill test certificates give us complete peace of mind.',
     rating: 5,
   },
 ]
@@ -100,470 +100,464 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
   return (
     <div className="w-full">
       {/* ─── 1. Hero Section ─── */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-slate-900 via-blue-950 to-slate-900">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-          <div className="mx-auto max-w-3xl text-center">
-            <div className="mb-6 inline-flex items-center rounded-full border border-blue-400/30 bg-blue-500/10 px-4 py-1.5 text-sm text-blue-300">
-              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-blue-400" />
-              Howrah, West Bengal | Est. 2008
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-stone-950">
+        {/* Animated gradient orbs */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-teal-600/20 blur-[120px] animate-pulse-glow" />
+          <div className="absolute -bottom-40 -left-40 w-[500px] h-[500px] rounded-full bg-amber-600/15 blur-[100px] animate-pulse-glow" style={{ animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-teal-500/5 blur-[150px]" />
+        </div>
+
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: 'linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px)',
+          backgroundSize: '60px 60px'
+        }} />
+
+        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 w-full">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left - Content */}
+            <div className="space-y-8">
+              <div className="animate-fade-in-up opacity-0 inline-flex items-center rounded-full border border-teal-400/20 bg-teal-500/10 px-4 py-1.5 text-sm text-teal-300 backdrop-blur-sm">
+                <span className="mr-2 inline-block h-2 w-2 rounded-full bg-teal-400 animate-pulse" />
+                Trusted by 1000+ businesses across Eastern India
+              </div>
+
+              <h1 className="animate-fade-in-up opacity-0 animation-delay-100 text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl leading-[1.1]">
+                Premium{' '}
+                <span className="text-gradient">Iron &amp; Steel</span>
+                {' '}Trading
+              </h1>
+
+              <p className="animate-fade-in-up opacity-0 animation-delay-200 max-w-xl text-lg leading-relaxed text-stone-400">
+                Supplying certified mild steel products from India&apos;s leading manufacturers. 
+                From sheets to structural steel — reliability, quality, and competitive pricing 
+                delivered to your doorstep.
+              </p>
+
+              <div className="animate-fade-in-up opacity-0 animation-delay-300 flex flex-col sm:flex-row gap-4">
+                <Button
+                  size="lg"
+                  className="h-12 bg-primary hover:bg-primary/90 text-primary-foreground px-8 text-base font-semibold shadow-lg shadow-primary/25 transition-all hover:shadow-primary/40"
+                  onClick={() => onNavigate('products')}
+                >
+                  Explore Products
+                  <ArrowRight className="ml-2 size-4" />
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="h-12 border-stone-600 bg-transparent px-8 text-base font-semibold text-stone-200 hover:bg-stone-800 hover:text-white hover:border-stone-500 transition-all"
+                  onClick={() => onNavigate('contact')}
+                >
+                  Request a Quote
+                </Button>
+              </div>
+
+              {/* Quick stats row */}
+              <div className="animate-fade-in-up opacity-0 animation-delay-400 flex items-center gap-8 pt-4">
+                <div>
+                  <p className="text-2xl font-bold text-white">15+</p>
+                  <p className="text-xs text-stone-500 uppercase tracking-wider">Years</p>
+                </div>
+                <div className="w-px h-10 bg-stone-800" />
+                <div>
+                  <p className="text-2xl font-bold text-white">500+</p>
+                  <p className="text-xs text-stone-500 uppercase tracking-wider">Products</p>
+                </div>
+                <div className="w-px h-10 bg-stone-800" />
+                <div>
+                  <p className="text-2xl font-bold text-white">1000+</p>
+                  <p className="text-xs text-stone-500 uppercase tracking-wider">Clients</p>
+                </div>
+              </div>
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Your Trusted Partner in{' '}
-              <span className="text-blue-400">Iron &amp; Steel Trading</span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-slate-300 sm:text-xl">
-              Supplying premium quality mild steel products from India&apos;s leading
-              manufacturers. From MS sheets to structural steel, we deliver
-              reliability, quality, and competitive pricing to businesses across
-              Eastern India.
-            </p>
-            <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button
-                size="lg"
-                className="h-12 bg-blue-600 px-8 text-base font-semibold hover:bg-blue-700"
-                onClick={() => onNavigate('products')}
-              >
-                Explore Products
-                <ArrowRight className="ml-2 size-4" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="h-12 border-blue-400/40 bg-transparent px-8 text-base font-semibold text-blue-300 hover:bg-blue-500/10 hover:text-blue-200"
-                onClick={() => onNavigate('contact')}
-              >
-                Get a Quote
-              </Button>
+
+            {/* Right - Feature cards grid */}
+            <div className="hidden lg:grid grid-cols-2 gap-4 animate-fade-in-up opacity-0 animation-delay-300">
+              <div className="space-y-4">
+                <div className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 transition-colors">
+                  <div className="h-10 w-10 rounded-xl bg-teal-500/20 flex items-center justify-center mb-4">
+                    <Truck className="h-5 w-5 text-teal-400" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-1">Fast Delivery</h3>
+                  <p className="text-sm text-stone-400">Dispatch within 48 hours from our Howrah warehouse</p>
+                </div>
+                <div className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 transition-colors">
+                  <div className="h-10 w-10 rounded-xl bg-amber-500/20 flex items-center justify-center mb-4">
+                    <ShieldCheck className="h-5 w-5 text-amber-400" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-1">Quality Assured</h3>
+                  <p className="text-sm text-stone-400">Mill test certificates with every single delivery</p>
+                </div>
+              </div>
+              <div className="space-y-4 mt-8">
+                <div className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 transition-colors">
+                  <div className="h-10 w-10 rounded-xl bg-rose-500/20 flex items-center justify-center mb-4">
+                    <Zap className="h-5 w-5 text-rose-400" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-1">Best Pricing</h3>
+                  <p className="text-sm text-stone-400">Competitive wholesale rates with transparent pricing</p>
+                </div>
+                <div className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 transition-colors">
+                  <div className="h-10 w-10 rounded-xl bg-violet-500/20 flex items-center justify-center mb-4">
+                    <HeadphonesIcon className="h-5 w-5 text-violet-400" />
+                  </div>
+                  <h3 className="text-white font-semibold mb-1">Expert Support</h3>
+                  <p className="text-sm text-stone-400">Steel specialists to guide your purchase decisions</p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-        {/* Decorative bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg
-            viewBox="0 0 1440 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="w-full"
-          >
-            <path
-              d="M0 60V20C240 0 480 40 720 30C960 20 1200 0 1440 20V60H0Z"
-              className="fill-background"
-            />
-          </svg>
-        </div>
+
+        {/* Bottom fade */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* ─── 2. Manufacturer Logos ─── */}
-      <section className="bg-background py-12 sm:py-16">
+      <section className="bg-background py-12 sm:py-16 border-b border-stone-100">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-8 text-center text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            Authorized Distributor for India&apos;s Top Manufacturers
+          <p className="mb-8 text-center text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+            Authorized Distributor for India&apos;s Premier Manufacturers
           </p>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             {manufacturers.map((mfr) => (
-              <Card
+              <div
                 key={mfr.name}
-                className="items-center justify-center border-muted py-4 hover:border-blue-300/50 hover:shadow-md transition-all"
+                className="flex items-center gap-3 px-5 py-4 rounded-xl border border-stone-100 bg-white hover:border-stone-300 hover:shadow-sm transition-all group"
               >
-                <CardContent className="flex flex-col items-center gap-2 px-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-slate-100 text-lg font-bold text-slate-700 sm:h-14 sm:w-14 sm:text-xl">
-                    {mfr.name.charAt(0)}
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm font-semibold text-foreground">
-                      {mfr.name}
-                    </p>
-                    <p className="hidden text-xs text-muted-foreground sm:block">
-                      {mfr.fullName}
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-stone-900 text-sm font-bold text-white shrink-0 group-hover:bg-primary transition-colors">
+                  {mfr.name.charAt(0)}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-bold text-stone-900 truncate">{mfr.name}</p>
+                  <p className="hidden sm:block text-[11px] text-stone-400 truncate">{mfr.fullName}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ─── 3. Introduction ─── */}
-      <section className="bg-background py-12 sm:py-20">
+      {/* ─── 3. Product Categories with Images ─── */}
+      <section className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
-            {/* Left column */}
-            <div>
-              <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-600">
-                About Us
-              </p>
-              <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Welcome to{' '}
-                <span className="text-blue-600">OMKARA COMMERCIAL PVT. LTD.</span>
-              </h2>
-              <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-                Founded in 2008, Omkara Commercial Pvt. Ltd. has grown into one of
-                Eastern India&apos;s most trusted names in iron and steel trading.
-                Based in Howrah, the industrial heart of West Bengal, we have built
-                our reputation on a foundation of quality products, competitive
-                pricing, and unwavering commitment to customer satisfaction.
-              </p>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                We are authorized distributors for some of India&apos;s premier steel
-                manufacturers including SAIL, TATA Steel, and others. Our extensive
-                inventory includes MS sheets, plates, beams, channels, angles, rounds,
-                and hollow pipes — all readily available for prompt dispatch.
-              </p>
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-                Whether you are a large construction company, a fabrication shop, or
-                an individual buyer, we cater to all scales of requirement with the
-                same dedication and professionalism.
-              </p>
-            </div>
-
-            {/* Right column: Stats + Legacy */}
-            <div className="flex flex-col gap-6">
-              <div className="grid grid-cols-3 gap-4">
-                <Card className="border-muted py-6 text-center">
-                  <CardContent className="px-4">
-                    <p className="text-3xl font-bold text-blue-600 sm:text-4xl">
-                      15+
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Years Experience
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card className="border-muted py-6 text-center">
-                  <CardContent className="px-4">
-                    <p className="text-3xl font-bold text-blue-600 sm:text-4xl">
-                      500+
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Products
-                    </p>
-                  </CardContent>
-                </Card>
-                <Card className="border-muted py-6 text-center">
-                  <CardContent className="px-4">
-                    <p className="text-3xl font-bold text-blue-600 sm:text-4xl">
-                      1000+
-                    </p>
-                    <p className="mt-1 text-sm text-muted-foreground">
-                      Happy Clients
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              <Card className="border-blue-200 bg-blue-50/50">
-                <CardContent className="px-6 py-5">
-                  <div className="flex items-start gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="size-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M3 21h18" />
-                        <path d="M5 21V7l7-4 7 4v14" />
-                        <path d="M9 21v-6h6v6" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-blue-900">
-                        Our Legacy
-                      </p>
-                      <p className="mt-1 text-sm leading-relaxed text-blue-800/80">
-                        Est. 2008 by <strong>Shri Somnath Gupta</strong>, Under{' '}
-                        <strong>2nd Generation Leadership</strong> — continuing a
-                        family tradition of excellence in the steel trading industry.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── 4. Product Categories ─── */}
-      <section className="bg-slate-50 py-12 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-600">
+          <div className="mb-14">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
               Our Products
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900">
               Product Categories
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-              Browse our comprehensive range of mild steel products, all sourced from
-              certified manufacturers and available for immediate dispatch.
+            <p className="mt-4 max-w-2xl text-stone-500 text-lg">
+              Browse our comprehensive range of mild steel products, sourced from certified manufacturers and available for immediate dispatch.
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {productCategories.map((cat) => (
-              <Card
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {productCategories.map((cat, i) => (
+              <button
                 key={cat.name}
-                className="group cursor-pointer border-muted hover:border-blue-300 hover:shadow-md transition-all"
+                className="group card-modern rounded-2xl border border-stone-200 bg-white overflow-hidden text-left"
                 onClick={() => onNavigate('products')}
               >
-                <CardContent className="px-6 py-5">
-                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-2xl transition-colors group-hover:bg-blue-200">
-                    {cat.icon}
+                <div className="relative aspect-[16/10] overflow-hidden bg-stone-100">
+                  <Image
+                    src={cat.image}
+                    alt={cat.name}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                  <div className="absolute bottom-3 left-3">
+                    <span className="inline-flex items-center rounded-lg bg-white/90 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-stone-800">
+                      View All
+                    </span>
                   </div>
-                  <h3 className="text-base font-semibold text-foreground">
+                </div>
+                <div className="p-5">
+                  <h3 className="text-base font-bold text-stone-900 group-hover:text-primary transition-colors">
                     {cat.name}
                   </h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                  <p className="mt-1.5 text-sm text-stone-500 leading-relaxed">
                     {cat.description}
                   </p>
-                  <p className="mt-3 flex items-center text-sm font-medium text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
-                    View Products
-                    <ArrowRight className="ml-1 size-3.5" />
-                  </p>
-                </CardContent>
-              </Card>
+                </div>
+              </button>
             ))}
+          </div>
+        </div>
+      </section>
 
-            {/* 7th card spans wider for the last item on larger screens */}
+      {/* ─── 4. About / Introduction ─── */}
+      <section className="bg-stone-50 py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-2 lg:gap-20 items-center">
+            {/* Left - Text */}
+            <div className="space-y-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">
+                About Us
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900 leading-tight">
+                Eastern India&apos;s Trusted{' '}
+                <span className="text-gradient">Steel Partner</span>{' '}
+                Since 2008
+              </h2>
+              <p className="text-stone-600 leading-relaxed">
+                Founded by <strong className="text-stone-900">Shri Somnath Gupta</strong>, Omkara Commercial Pvt. Ltd. 
+                has grown into one of Howrah&apos;s most dependable iron and steel suppliers. We specialise in 
+                Flat Products and Long Structural Products, sourced exclusively from India&apos;s premier steel mills.
+              </p>
+              <p className="text-stone-600 leading-relaxed">
+                Whether you are a large construction company, a fabrication shop, or an individual buyer, 
+                we cater to all scales of requirement with the same dedication and professionalism.
+              </p>
+              <Button
+                variant="outline"
+                className="mt-2"
+                onClick={() => onNavigate('about')}
+              >
+                Learn More About Us
+                <ArrowRight className="ml-2 size-4" />
+              </Button>
+            </div>
+
+            {/* Right - Stats Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="rounded-2xl bg-white border border-stone-100 p-6 shadow-sm">
+                <p className="text-4xl font-extrabold text-primary">15+</p>
+                <p className="mt-1 text-sm text-stone-500">Years Experience</p>
+              </div>
+              <div className="rounded-2xl bg-white border border-stone-100 p-6 shadow-sm">
+                <p className="text-4xl font-extrabold text-primary">500+</p>
+                <p className="mt-1 text-sm text-stone-500">Products</p>
+              </div>
+              <div className="rounded-2xl bg-white border border-stone-100 p-6 shadow-sm">
+                <p className="text-4xl font-extrabold text-primary">1000+</p>
+                <p className="mt-1 text-sm text-stone-500">Happy Clients</p>
+              </div>
+              <div className="rounded-2xl bg-stone-900 p-6 text-white shadow-sm">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-500/20 mb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="size-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 21h18" /><path d="M5 21V7l7-4 7 4v14" /><path d="M9 21v-6h6v6" />
+                  </svg>
+                </div>
+                <p className="text-sm font-semibold text-white">Our Legacy</p>
+                <p className="mt-1 text-xs text-stone-400">
+                  Under 2nd Generation Leadership — continuing a family tradition of excellence
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ─── 5. Why Choose Us ─── */}
-      <section className="bg-background py-12 sm:py-20">
+      <section className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-600">
+          <div className="mb-14 text-center">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
               Our Strengths
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Why Choose Us
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900">
+              Why Choose Omkara
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-              With over 15 years of industry experience, we offer unparalleled
-              service and reliability.
+            <p className="mx-auto mt-4 max-w-2xl text-stone-500 text-lg">
+              With over 15 years of industry experience, we offer unparalleled service and reliability.
             </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {whyChooseUs.map((feature) => (
-              <Card
+              <div
                 key={feature.title}
-                className="border-muted hover:border-blue-200 hover:shadow-md transition-all"
+                className="card-modern rounded-2xl border border-stone-200 bg-white p-6 relative overflow-hidden"
               >
-                <CardContent className="px-6 py-6">
-                  <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
-                    <feature.icon className="size-6" />
-                  </div>
-                  <h3 className="text-base font-semibold text-foreground">
-                    {feature.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
+                {/* Gradient top bar */}
+                <div className={cn('absolute top-0 left-0 right-0 h-1 bg-gradient-to-r', feature.gradient)} />
+                <div className="h-12 w-12 rounded-xl bg-stone-100 flex items-center justify-center mb-5">
+                  <feature.icon className="h-6 w-6 text-stone-700" />
+                </div>
+                <h3 className="text-lg font-bold text-stone-900 mb-2">
+                  {feature.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-stone-500">
+                  {feature.description}
+                </p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ─── 6. Testimonials ─── */}
-      <section className="bg-slate-50 py-12 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-600">
+      <section className="bg-stone-950 py-16 sm:py-24 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-teal-500/5 blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-amber-500/5 blur-[120px]" />
+
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-14 text-center">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-teal-400">
               Testimonials
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
               What Our Clients Say
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-              Trusted by hundreds of businesses across Eastern India for quality
-              steel products and reliable service.
+            <p className="mx-auto mt-4 max-w-2xl text-stone-400 text-lg">
+              Trusted by hundreds of businesses across Eastern India
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((testimonial) => (
-              <Card
+              <div
                 key={testimonial.name}
-                className="border-muted hover:shadow-md transition-shadow"
+                className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 transition-colors"
               >
-                <CardContent className="px-6 py-6">
-                  {/* Star rating */}
-                  <div className="mb-4 flex gap-0.5">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
-                        key={i}
-                        className={cn(
-                          'size-4',
-                          i < testimonial.rating
-                            ? 'fill-yellow-400 text-yellow-400'
-                            : 'fill-muted text-muted'
-                        )}
-                      />
-                    ))}
-                  </div>
+                {/* Star rating */}
+                <div className="mb-4 flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={cn(
+                        'size-4',
+                        i < testimonial.rating
+                          ? 'fill-amber-400 text-amber-400'
+                          : 'fill-stone-700 text-stone-700'
+                      )}
+                    />
+                  ))}
+                </div>
 
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    &ldquo;{testimonial.text}&rdquo;
-                  </p>
+                <p className="text-sm leading-relaxed text-stone-300">
+                  &ldquo;{testimonial.text}&rdquo;
+                </p>
 
-                  <div className="mt-5 flex items-center gap-3 border-t pt-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
-                      {testimonial.name
-                        .split(' ')
-                        .map((n) => n[0])
-                        .join('')}
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-foreground">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {testimonial.role}, {testimonial.company}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {testimonial.location}
-                      </p>
-                    </div>
+                <div className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 text-sm font-bold text-white">
+                    {testimonial.name.split(' ').map((n) => n[0]).join('')}
                   </div>
-                </CardContent>
-              </Card>
+                  <div>
+                    <p className="text-sm font-semibold text-white">{testimonial.name}</p>
+                    <p className="text-xs text-stone-400">
+                      {testimonial.role}, {testimonial.company}
+                    </p>
+                    <p className="text-xs text-stone-500">{testimonial.location}</p>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ─── 7. Technical Resources ─── */}
-      <section className="bg-background py-12 sm:py-20">
+      <section className="bg-background py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 text-center">
-            <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-600">
+          <div className="mb-14 text-center">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
               Resources
             </p>
-            <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900">
               Technical Resources
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
-              Access steel grades, calculate weights, and download our complete
-              product catalogue.
+            <p className="mx-auto mt-4 max-w-2xl text-stone-500 text-lg">
+              Access steel grades, calculate weights, and download our complete product catalogue.
             </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">
-            {/* Grades & Specifications */}
-            <Card
-              className="group cursor-pointer border-muted hover:border-blue-300 hover:shadow-md transition-all"
+            <div
+              className="card-modern group cursor-pointer rounded-2xl border border-stone-200 bg-white p-6"
               onClick={() => onNavigate('grades')}
             >
-              <CardContent className="px-6 py-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600 transition-colors group-hover:bg-blue-200">
-                  <BookOpen className="size-6" />
-                </div>
-                <h3 className="text-base font-semibold text-foreground">
-                  Grades &amp; Specifications
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Detailed information about steel grades, chemical compositions, and
-                  mechanical properties for all product categories.
-                </p>
-                <p className="mt-4 flex items-center text-sm font-medium text-blue-600">
-                  View Grades
-                  <ArrowRight className="ml-1 size-3.5" />
-                </p>
-              </CardContent>
-            </Card>
+              <div className="h-12 w-12 rounded-xl bg-teal-50 flex items-center justify-center mb-5 group-hover:bg-teal-100 transition-colors">
+                <BookOpen className="h-6 w-6 text-teal-600" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-900 mb-2">Grades &amp; Specifications</h3>
+              <p className="text-sm leading-relaxed text-stone-500">
+                Detailed information about steel grades, chemical compositions, and mechanical properties.
+              </p>
+              <p className="mt-4 flex items-center text-sm font-semibold text-primary">
+                View Grades
+                <ArrowRight className="ml-1 size-3.5" />
+              </p>
+            </div>
 
-            {/* Weight Calculator */}
-            <Card
-              className="group cursor-pointer border-muted hover:border-blue-300 hover:shadow-md transition-all"
+            <div
+              className="card-modern group cursor-pointer rounded-2xl border border-stone-200 bg-white p-6"
               onClick={() => onNavigate('weight-calc')}
             >
-              <CardContent className="px-6 py-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600 transition-colors group-hover:bg-blue-200">
-                  <Calculator className="size-6" />
-                </div>
-                <h3 className="text-base font-semibold text-foreground">
-                  Weight Calculator
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Calculate the weight of steel products based on dimensions, thickness,
-                  and grade. Supports all product types.
-                </p>
-                <p className="mt-4 flex items-center text-sm font-medium text-blue-600">
-                  Open Calculator
-                  <ArrowRight className="ml-1 size-3.5" />
-                </p>
-              </CardContent>
-            </Card>
+              <div className="h-12 w-12 rounded-xl bg-amber-50 flex items-center justify-center mb-5 group-hover:bg-amber-100 transition-colors">
+                <Calculator className="h-6 w-6 text-amber-600" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-900 mb-2">Weight Calculator</h3>
+              <p className="text-sm leading-relaxed text-stone-500">
+                Calculate the weight of steel products based on dimensions, thickness, and grade.
+              </p>
+              <p className="mt-4 flex items-center text-sm font-semibold text-primary">
+                Open Calculator
+                <ArrowRight className="ml-1 size-3.5" />
+              </p>
+            </div>
 
-            {/* Product Catalogue */}
-            <Card className="group border-muted hover:border-blue-300 hover:shadow-md transition-all">
-              <CardContent className="px-6 py-6">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600 transition-colors group-hover:bg-blue-200">
-                  <FileText className="size-6" />
-                </div>
-                <h3 className="text-base font-semibold text-foreground">
-                  Product Catalogue
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Download our complete product catalogue with specifications, sizes,
-                  and pricing information in PDF format.
-                </p>
-                <a
-                  href="/api/catalogue"
-                  className="mt-4 flex items-center text-sm font-medium text-blue-600"
-                >
-                  Download PDF
-                  <ArrowRight className="ml-1 size-3.5" />
-                </a>
-              </CardContent>
-            </Card>
+            <div className="card-modern group rounded-2xl border border-stone-200 bg-white p-6">
+              <div className="h-12 w-12 rounded-xl bg-rose-50 flex items-center justify-center mb-5 group-hover:bg-rose-100 transition-colors">
+                <FileText className="h-6 w-6 text-rose-600" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-900 mb-2">Product Catalogue</h3>
+              <p className="text-sm leading-relaxed text-stone-500">
+                Download our complete product catalogue with specifications, sizes, and pricing.
+              </p>
+              <a
+                href="/api/catalogue"
+                className="mt-4 flex items-center text-sm font-semibold text-primary"
+              >
+                Download PDF
+                <ArrowRight className="ml-1 size-3.5" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ─── 8. CTA Section ─── */}
-      <section className="relative overflow-hidden bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-blue-400/10 via-transparent to-transparent" />
-        <div className="relative mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 sm:py-20 lg:px-8">
-          <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Ready to Place Your Order?
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-blue-100">
-            Get in touch with our team for competitive quotes, product availability,
-            and bulk pricing. We&apos;re here to help you find the right steel
-            solutions.
-          </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button
-              size="lg"
-              className="h-12 bg-white px-8 text-base font-semibold text-blue-700 hover:bg-blue-50"
-              onClick={() => onNavigate('contact')}
-            >
-              Contact Us
-              <ArrowRight className="ml-2 size-4" />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-12 border-white/30 bg-transparent px-8 text-base font-semibold text-white hover:bg-white/10 hover:text-white"
-              onClick={() => {
-                window.open('https://wa.me/919876543210', '_blank')
-              }}
-            >
-              <MessageCircle className="mr-2 size-4" />
-              WhatsApp Us
-            </Button>
+      <section className="relative overflow-hidden">
+        <div className="bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 py-20 sm:py-24">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full bg-teal-500/10 blur-[100px]" />
+            <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full bg-amber-500/10 blur-[100px]" />
+          </div>
+          <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+            <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+              Ready to Place Your Order?
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-lg text-stone-400">
+              Get in touch for competitive quotes, product availability, and bulk pricing. 
+              We&apos;re here to find the right steel solutions for you.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button
+                size="lg"
+                className="h-12 bg-primary hover:bg-primary/90 text-primary-foreground px-8 text-base font-semibold shadow-lg shadow-primary/25"
+                onClick={() => onNavigate('contact')}
+              >
+                Contact Us
+                <ArrowRight className="ml-2 size-4" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-12 border-stone-600 bg-transparent px-8 text-base font-semibold text-stone-200 hover:bg-stone-800 hover:text-white hover:border-stone-500"
+                onClick={() => window.open('https://wa.me/919123857784', '_blank')}
+              >
+                <MessageCircle className="mr-2 size-4" />
+                WhatsApp Us
+              </Button>
+            </div>
           </div>
         </div>
       </section>

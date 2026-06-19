@@ -10,6 +10,8 @@ import {
   Check,
   Download,
   MessageCircle,
+  SlidersHorizontal,
+  X,
 } from "lucide-react"
 import { products } from "@/lib/product-data"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 interface ProductsSectionProps {
   initialCategory?: string
@@ -51,7 +54,7 @@ const categories = [
   { slug: "ms-channel", name: "MS Channel" },
   { slug: "ms-angle", name: "MS Angle" },
   { slug: "ms-round", name: "MS Round" },
-  { slug: "ms-hollow-pipes", name: "MS Hollow Pipes" },
+  { slug: "ms-hollow-pipes", name: "Hollow Pipes" },
 ]
 
 const allProductsList: ProductListItem[] = Object.entries(products).map(
@@ -143,7 +146,7 @@ export function ProductsSection({ initialCategory }: ProductsSectionProps) {
     const whatsappUrl = `https://wa.me/919123857784?text=${whatsappText}`
 
     return (
-      <section className="py-12">
+      <section className="py-8 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Back Button */}
           <button
@@ -151,7 +154,7 @@ export function ProductsSection({ initialCategory }: ProductsSectionProps) {
               setSelectedProduct(null)
               setFormSuccess(false)
             }}
-            className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors mb-8 group"
+            className="inline-flex items-center gap-2 text-sm text-stone-500 hover:text-stone-900 transition-colors mb-6 group"
           >
             <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
             Back to Products
@@ -161,67 +164,69 @@ export function ProductsSection({ initialCategory }: ProductsSectionProps) {
             {/* Left Column — Product Info (2/3) */}
             <div className="lg:col-span-2 space-y-8">
               {/* Product Image */}
-              <div className="aspect-[16/9] rounded-xl overflow-hidden bg-muted">
+              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden bg-stone-100">
                 <Image
                   src={getProductImage(currentProduct.category)}
                   alt={currentProduct.title}
-                  width={800}
-                  height={450}
-                  className="h-full w-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                  priority
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute bottom-4 left-4">
+                  <Badge className="bg-white/90 text-stone-800 hover:bg-white/90 backdrop-blur-sm text-xs font-semibold">
+                    {currentProduct.categoryName}
+                  </Badge>
+                </div>
               </div>
 
-              {/* Category Badge + Title */}
+              {/* Title */}
               <div>
-                <Badge variant="secondary" className="mb-3">
-                  {currentProduct.categoryName}
-                </Badge>
-                <h1 className="text-3xl font-bold tracking-tight">
+                <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-stone-900">
                   {currentProduct.title}
                 </h1>
               </div>
 
               {/* Description */}
-              <p className="text-muted-foreground leading-relaxed text-lg">
+              <p className="text-stone-600 leading-relaxed text-base sm:text-lg">
                 {currentProduct.description}
               </p>
 
               {/* Specifications */}
               {currentProduct.specifications.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-xl">Specifications</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 divide-y sm:divide-y-0 sm:divide-x divide-border">
-                      {currentProduct.specifications.map((spec) => (
-                        <div
-                          key={spec.key}
-                          className="flex items-center justify-between px-4 py-3 first:pl-0 last:pr-0 sm:first:pl-4 sm:last:pr-4"
-                        >
-                          <span className="text-sm text-muted-foreground font-medium">
-                            {spec.key}
-                          </span>
-                          <span className="text-sm font-semibold text-right ml-4">
-                            {spec.value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="rounded-2xl border border-stone-200 bg-white overflow-hidden">
+                  <div className="px-6 py-4 border-b border-stone-100 bg-stone-50/50">
+                    <h2 className="text-lg font-bold text-stone-900">Specifications</h2>
+                  </div>
+                  <div className="divide-y divide-stone-100">
+                    {currentProduct.specifications.map((spec) => (
+                      <div
+                        key={spec.key}
+                        className="flex items-center justify-between px-6 py-3.5"
+                      >
+                        <span className="text-sm text-stone-500 font-medium">
+                          {spec.key}
+                        </span>
+                        <span className="text-sm font-semibold text-stone-900 text-right ml-4">
+                          {spec.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4">
-                <Button asChild size="lg">
+                <Button asChild size="lg" className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/25">
                   <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                     <MessageCircle className="h-5 w-5" />
                     Inquire on WhatsApp
                   </a>
                 </Button>
                 {currentProduct.pdfUrl && (
-                  <Button asChild variant="outline" size="lg">
+                  <Button asChild variant="outline" size="lg" className="border-stone-300">
                     <a
                       href={currentProduct.pdfUrl}
                       target="_blank"
@@ -237,111 +242,113 @@ export function ProductsSection({ initialCategory }: ProductsSectionProps) {
 
             {/* Right Column — Quote Form (1/3) */}
             <div className="lg:col-span-1">
-              <Card className="sticky top-8">
-                <CardHeader>
-                  <CardTitle className="text-xl">Request a Quote</CardTitle>
-                  <p className="text-sm text-muted-foreground">
-                    Fill in your details and we&apos;ll get back to you within 24 hours.
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  {formSuccess ? (
-                    <div className="flex flex-col items-center justify-center py-8 text-center">
-                      <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
-                        <Check className="h-6 w-6 text-green-600" />
-                      </div>
-                      <h3 className="font-semibold text-lg">Quote Request Sent!</h3>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        We&apos;ll contact you shortly with pricing and availability.
-                      </p>
-                      <Button
-                        variant="outline"
-                        className="mt-4"
-                        onClick={() => setFormSuccess(false)}
-                      >
-                        Send Another Request
-                      </Button>
+              <div className="rounded-2xl border border-stone-200 bg-white p-6 sticky top-28 shadow-sm">
+                <h2 className="text-xl font-bold text-stone-900">Request a Quote</h2>
+                <p className="text-sm text-stone-500 mt-1 mb-6">
+                  We&apos;ll get back to you within 24 hours.
+                </p>
+                {formSuccess ? (
+                  <div className="flex flex-col items-center justify-center py-8 text-center">
+                    <div className="h-14 w-14 rounded-2xl bg-emerald-100 flex items-center justify-center mb-4">
+                      <Check className="h-7 w-7 text-emerald-600" />
                     </div>
-                  ) : (
-                    <form onSubmit={handleInquirySubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="quote-name">Full Name *</Label>
-                        <Input
-                          id="quote-name"
-                          value={formName}
-                          onChange={(e) => setFormName(e.target.value)}
-                          placeholder="Your name"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="quote-email">Email *</Label>
-                        <Input
-                          id="quote-email"
-                          type="email"
-                          value={formEmail}
-                          onChange={(e) => setFormEmail(e.target.value)}
-                          placeholder="you@company.com"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="quote-phone">Phone *</Label>
-                        <Input
-                          id="quote-phone"
-                          type="tel"
-                          value={formPhone}
-                          onChange={(e) => setFormPhone(e.target.value)}
-                          placeholder="+91 98765 43210"
-                          required
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="quote-company">Company</Label>
-                        <Input
-                          id="quote-company"
-                          value={formCompany}
-                          onChange={(e) => setFormCompany(e.target.value)}
-                          placeholder="Company name (optional)"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="quote-quantity">Quantity</Label>
-                        <Input
-                          id="quote-quantity"
-                          value={formQuantity}
-                          onChange={(e) => setFormQuantity(e.target.value)}
-                          placeholder="e.g. 10 MT"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="quote-message">Message</Label>
-                        <Textarea
-                          id="quote-message"
-                          value={formMessage}
-                          onChange={(e) => setFormMessage(e.target.value)}
-                          placeholder="Additional requirements or notes..."
-                          rows={3}
-                        />
-                      </div>
-                      <Button
-                        type="submit"
-                        className="w-full"
-                        disabled={formSubmitting}
-                      >
-                        {formSubmitting ? (
-                          <>
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                            Submitting...
-                          </>
-                        ) : (
-                          "Submit Inquiry"
-                        )}
-                      </Button>
-                    </form>
-                  )}
-                </CardContent>
-              </Card>
+                    <h3 className="font-bold text-lg text-stone-900">Quote Sent!</h3>
+                    <p className="text-sm text-stone-500 mt-1">
+                      We&apos;ll contact you shortly with pricing and availability.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="mt-4 border-stone-300"
+                      onClick={() => setFormSuccess(false)}
+                    >
+                      Send Another
+                    </Button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleInquirySubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="quote-name" className="text-stone-700">Full Name *</Label>
+                      <Input
+                        id="quote-name"
+                        value={formName}
+                        onChange={(e) => setFormName(e.target.value)}
+                        placeholder="Your name"
+                        required
+                        className="border-stone-200"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="quote-email" className="text-stone-700">Email *</Label>
+                      <Input
+                        id="quote-email"
+                        type="email"
+                        value={formEmail}
+                        onChange={(e) => setFormEmail(e.target.value)}
+                        placeholder="you@company.com"
+                        required
+                        className="border-stone-200"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="quote-phone" className="text-stone-700">Phone *</Label>
+                      <Input
+                        id="quote-phone"
+                        type="tel"
+                        value={formPhone}
+                        onChange={(e) => setFormPhone(e.target.value)}
+                        placeholder="+91 98765 43210"
+                        required
+                        className="border-stone-200"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="quote-company" className="text-stone-700">Company</Label>
+                      <Input
+                        id="quote-company"
+                        value={formCompany}
+                        onChange={(e) => setFormCompany(e.target.value)}
+                        placeholder="Company name (optional)"
+                        className="border-stone-200"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="quote-quantity" className="text-stone-700">Quantity</Label>
+                      <Input
+                        id="quote-quantity"
+                        value={formQuantity}
+                        onChange={(e) => setFormQuantity(e.target.value)}
+                        placeholder="e.g. 10 MT"
+                        className="border-stone-200"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="quote-message" className="text-stone-700">Message</Label>
+                      <Textarea
+                        id="quote-message"
+                        value={formMessage}
+                        onChange={(e) => setFormMessage(e.target.value)}
+                        placeholder="Additional requirements..."
+                        rows={3}
+                        className="border-stone-200"
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/25"
+                      disabled={formSubmitting}
+                    >
+                      {formSubmitting ? (
+                        <>
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Submitting...
+                        </>
+                      ) : (
+                        "Submit Inquiry"
+                      )}
+                    </Button>
+                  </form>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -351,123 +358,136 @@ export function ProductsSection({ initialCategory }: ProductsSectionProps) {
 
   // ─── Product Listing View ───────────────────────────────────────────
   return (
-    <section className="py-12">
+    <section className="py-8 sm:py-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold tracking-tight">Our Products</h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Browse our comprehensive range of {allProductsList.length} MS steel
-            products
+        {/* Page Header */}
+        <div className="mb-10">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-stone-900">
+            Our Products
+          </h1>
+          <p className="mt-3 text-lg text-stone-500">
+            Browse our comprehensive range of {allProductsList.length} MS steel products
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Sidebar — Categories */}
-          <aside className="lg:w-64 shrink-0">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Categories</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-1">
+        {/* Search + Filter Bar */}
+        <div className="mb-8 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" />
+              <Input
+                placeholder="Search products by name, category, or specification..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 h-11 border-stone-200 bg-white rounded-xl"
+              />
+              {searchQuery && (
                 <button
-                  onClick={() => setActiveCategory("")}
-                  className={`flex w-full items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
-                    !activeCategory
-                      ? "bg-primary text-primary-foreground font-medium"
-                      : "hover:bg-muted"
-                  }`}
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
                 >
-                  <span>All Products</span>
-                  <span className="text-xs opacity-70">
-                    {allProductsList.length}
-                  </span>
+                  <X className="h-4 w-4" />
                 </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.slug}
-                    onClick={() => setActiveCategory(cat.slug)}
-                    className={`flex w-full items-center justify-between px-3 py-2 rounded-md text-sm transition-colors ${
-                      activeCategory === cat.slug
-                        ? "bg-primary text-primary-foreground font-medium"
-                        : "hover:bg-muted"
-                    }`}
-                  >
-                    <span>{cat.name}</span>
-                    <span className="text-xs opacity-70">
-                      {categoryCounts[cat.slug] || 0}
-                    </span>
-                  </button>
-                ))}
-              </CardContent>
-            </Card>
-          </aside>
-
-          {/* Main Content */}
-          <div className="flex-1">
-            {/* Search */}
-            <div className="mb-6">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Search products by name or category..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
+              )}
             </div>
+          </div>
 
-            <div className="text-sm text-muted-foreground mb-4">
-              {filteredProducts.length} product
-              {filteredProducts.length !== 1 ? "s" : ""} found
-            </div>
-
-            {filteredProducts.length === 0 ? (
-              <div className="text-center py-20">
-                <p className="text-muted-foreground text-lg">
-                  No products found matching your criteria.
-                </p>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Try a different search term or category.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filteredProducts.map((product) => (
-                  <button
-                    key={product.slug}
-                    onClick={() => setSelectedProduct(product.slug)}
-                    className="group rounded-xl border bg-card overflow-hidden hover:shadow-lg hover:border-primary/50 transition-all duration-300 text-left w-full"
-                  >
-                    <div className="aspect-[4/3] bg-muted overflow-hidden relative">
-                      <Image
-                        src={getProductImage(product.category)}
-                        alt={product.categoryName}
-                        fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    </div>
-                    <div className="p-6">
-                      <div className="flex items-start justify-between mb-3">
-                        <Badge variant="secondary" className="text-xs">
-                          {product.categoryName}
-                        </Badge>
-                        <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-all" />
-                      </div>
-                      <h3 className="font-semibold group-hover:text-primary transition-colors">
-                        {product.title}
-                      </h3>
-                      <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                        {product.description}
-                      </p>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
+          {/* Category filter chips */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <SlidersHorizontal className="h-4 w-4 text-stone-400 shrink-0" />
+            <button
+              onClick={() => setActiveCategory("")}
+              className={cn(
+                "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                !activeCategory
+                  ? "bg-stone-900 text-white shadow-sm"
+                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+              )}
+            >
+              All Products
+              <span className="ml-1.5 text-xs opacity-70">({allProductsList.length})</span>
+            </button>
+            {categories.map((cat) => (
+              <button
+                key={cat.slug}
+                onClick={() => setActiveCategory(cat.slug)}
+                className={cn(
+                  "px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+                  activeCategory === cat.slug
+                    ? "bg-stone-900 text-white shadow-sm"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                )}
+              >
+                {cat.name}
+                <span className="ml-1.5 text-xs opacity-70">({categoryCounts[cat.slug] || 0})</span>
+              </button>
+            ))}
           </div>
         </div>
+
+        {/* Results count */}
+        <div className="text-sm text-stone-400 mb-6">
+          Showing {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
+          {activeCategory && <span> in <strong className="text-stone-600">{categories.find(c => c.slug === activeCategory)?.name}</strong></span>}
+        </div>
+
+        {filteredProducts.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="mx-auto h-16 w-16 rounded-2xl bg-stone-100 flex items-center justify-center mb-4">
+              <Search className="h-7 w-7 text-stone-400" />
+            </div>
+            <p className="text-stone-600 text-lg font-semibold">No products found</p>
+            <p className="text-sm text-stone-400 mt-1">
+              Try a different search term or category filter.
+            </p>
+            <Button
+              variant="outline"
+              className="mt-4 border-stone-300"
+              onClick={() => { setSearchQuery(""); setActiveCategory("") }}
+            >
+              Clear Filters
+            </Button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+            {filteredProducts.map((product) => (
+              <button
+                key={product.slug}
+                onClick={() => setSelectedProduct(product.slug)}
+                className="group card-modern rounded-2xl border border-stone-200 bg-white overflow-hidden text-left"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-stone-100">
+                  <Image
+                    src={getProductImage(product.category)}
+                    alt={product.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  <div className="absolute top-3 left-3">
+                    <Badge className="bg-white/90 text-stone-700 hover:bg-white/90 backdrop-blur-sm text-[11px] font-semibold">
+                      {product.categoryName}
+                    </Badge>
+                  </div>
+                  <div className="absolute bottom-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="h-8 w-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                      <ArrowRight className="h-4 w-4 text-stone-700" />
+                    </div>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <h3 className="font-bold text-stone-900 group-hover:text-primary transition-colors leading-snug">
+                    {product.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-stone-500 line-clamp-2 leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )
