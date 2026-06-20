@@ -10,6 +10,7 @@ const navigation = [
   { name: "Products", key: "products" },
   { name: "Grades", key: "grades" },
   { name: "Weight Calculator", key: "weight-calc" },
+  { name: "Quotation", key: "quotation" },
   { name: "About Us", key: "about" },
   { name: "Contact", key: "contact" },
 ]

@@ -364,3 +364,80 @@ Stage Summary:
 - Grade badges (e.g., "IS 2062 E250") visible inline on every product row
 - One-click WhatsApp Quick Quote on every product
 - Slide-over detail panel replaces full-page navigation for faster browsing
+
+---
+Task ID: 1
+Agent: Testimonials Carousel Agent
+Task: Replace static testimonial grid with auto-rotating carousel
+
+Work Log:
+- Read HomeSection.tsx to understand structure
+- Added React hooks imports (useState, useEffect, useCallback, useRef)
+- Added ChevronLeft, ChevronRight Lucide icon imports
+- Added carousel state (activeIndex, isPaused) and navigation functions (goToIndex, goNext, goPrev)
+- Added auto-rotation useEffect with 5s interval and cleanup
+- Replaced static 3-col grid with single-card carousel (max-w-[600px], centered)
+- Implemented crossfade animation (opacity + scale, duration-700)
+- Added clickable dot indicators with active state (w-6 bg-teal-400 vs w-2 bg-stone-600)
+- Added left/right arrow buttons (hidden on mobile, visible on desktop via lg:flex)
+- Added pause on hover behavior via onMouseEnter/onMouseLeave
+- Kept existing dark theme, background decorations, star ratings, quote text, and author info
+- Made card slightly larger (p-8, size-5 stars, h-12 avatar, text-base quote)
+
+Stage Summary:
+- Testimonials now auto-rotate as a carousel
+- One card at a time, centered, with navigation controls
+- Lint passes with no errors
+- Dev server compiles successfully
+
+---
+Task ID: 4
+Agent: Steel Rates Agent
+Task: Create steel rate indicator with live data and display component
+
+Work Log:
+- Created /api/steel-rates with web search via z-ai-web-dev-sdk and fallback data
+- Created SteelRatesSection.tsx with trend indicators, skeleton loading, error handling
+- Integrated between manufacturer logos and product categories in HomeSection.tsx
+
+Stage Summary:
+- Live steel rates section with 8 product rates
+- Trend indicators (up/down/stable) with colored arrows
+- 6-hour server-side cache, graceful fallback on search failure
+- Horizontal scroll on mobile, 4-column grid on desktop
+- WhatsApp CTA button for confirmed quotes
+- Lint passes clean, dev server compiles successfully
+---
+Task ID: 3
+Agent: PDF Quotation Generator Agent
+Task: Create PDF quotation generator with API and frontend
+
+Work Log:
+- Created /api/quotation POST endpoint with PDFKit
+- Professional PDF layout with company header, items table, GST calculation
+- Created QuotationGenerator.tsx with dynamic line items and auto-calculation
+- Integrated into home page resources section and navigation
+
+Stage Summary:
+- Full quotation generator: API generates professional PDFs
+- Frontend has dynamic item rows, auto-calc, GST, WhatsApp sharing
+- Linked from home page resources section and header nav
+---
+Task ID: 2
+Agent: Gallery Section Agent
+Task: Create photo gallery section with lightbox
+
+Work Log:
+- Generated 5 AI images for gallery (warehouse-interior, steel-delivery, steel-yard, construction-site, quality-control)
+- Reused existing ms-plate.jpg for 6th gallery item
+- Created GallerySection.tsx with 6 gallery items in responsive grid
+- Implemented 2x3 grid layout (first image spans 2 cols on lg)
+- Built custom lightbox with fade animation, keyboard navigation (Escape, Arrow keys)
+- Added hover overlay with title, description, and View icon
+- Integrated into HomeSection between Why Choose Us and Testimonials
+
+Stage Summary:
+- Photo gallery with lightbox added to homepage
+- 6 images: warehouse, delivery, yard, construction, quality, products
+- Fullscreen lightbox with prev/next navigation and keyboard support
+- Responsive design: 1 col mobile, 2 col tablet, 3 col desktop

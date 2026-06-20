@@ -9,6 +9,7 @@ import { AboutSection } from "@/components/sections/AboutSection"
 import { ContactSection } from "@/components/sections/ContactSection"
 import { GradesSection } from "@/components/sections/GradesSection"
 import { WeightCalculatorSection } from "@/components/sections/WeightCalculatorSection"
+import { QuotationGenerator } from "@/components/sections/QuotationGenerator"
 import { FAQSection } from "@/components/sections/FAQSection"
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp"
 import { ScrollProgressBar } from "@/components/ScrollProgressBar"
@@ -49,6 +50,8 @@ export default function Page() {
         return <GradesSection />
       case "weight-calc":
         return <WeightCalculatorSection />
+      case "quotation":
+        return <QuotationGenerator />
       default:
         return (
           <>

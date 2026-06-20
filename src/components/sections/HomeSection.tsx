@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
@@ -18,7 +19,11 @@ import {
   Zap,
   TrendingUp,
   Truck,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react'
+import SteelRatesSection from './SteelRatesSection'
+import { GallerySection } from './GallerySection'
 
 interface HomeSectionProps {
   onNavigate: (page: string) => void
@@ -97,6 +102,35 @@ const testimonials = [
 ]
 
 export function HomeSection({ onNavigate }: HomeSectionProps) {
+  // Carousel state
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const goToIndex = useCallback((index: number) => {
+    setActiveIndex(index % testimonials.length)
+  }, [])
+
+  const goNext = useCallback(() => {
+    setActiveIndex((prev) => (prev + 1) % testimonials.length)
+  }, [])
+
+  const goPrev = useCallback(() => {
+    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  }, [])
+
+  // Auto-rotation
+  useEffect(() => {
+    if (isPaused) {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      return
+    }
+    intervalRef.current = setInterval(goNext, 5000)
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+  }, [isPaused, goNext])
+
   return (
     <div className="w-full">
       {/* ─── 1. Hero Section ─── */}
@@ -236,6 +270,9 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
           </div>
         </div>
       </section>
+
+      {/* ─── 2b. Today's Steel Rates ─── */}
+      <SteelRatesSection />
 
       {/* ─── 3. Product Categories with Images ─── */}
       <section className="bg-background py-16 sm:py-24">
@@ -389,6 +426,9 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
         </div>
       </section>
 
+      {/* ─── 5.5 Gallery ─── */}
+      <GallerySection />
+
       {/* ─── 6. Testimonials ─── */}
       <section className="bg-stone-950 py-16 sm:py-24 relative overflow-hidden">
         {/* Background decoration */}
@@ -408,45 +448,96 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((testimonial) => (
-              <div
-                key={testimonial.name}
-                className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 hover:bg-white/10 transition-colors"
-              >
-                {/* Star rating */}
-                <div className="mb-4 flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={cn(
-                        'size-4',
-                        i < testimonial.rating
-                          ? 'fill-amber-400 text-amber-400'
-                          : 'fill-stone-700 text-stone-700'
-                      )}
-                    />
-                  ))}
-                </div>
+          {/* Carousel container */}
+          <div
+            className="relative"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+          >
+            {/* Left arrow — hidden on mobile */}
+            <button
+              onClick={goPrev}
+              className="hidden lg:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-14 z-10 h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-stone-300 backdrop-blur-sm hover:bg-white/10 hover:text-white transition-colors"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="size-5" />
+            </button>
 
-                <p className="text-sm leading-relaxed text-stone-300">
-                  &ldquo;{testimonial.text}&rdquo;
-                </p>
+            {/* Right arrow — hidden on mobile */}
+            <button
+              onClick={goNext}
+              className="hidden lg:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-14 z-10 h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-stone-300 backdrop-blur-sm hover:bg-white/10 hover:text-white transition-colors"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="size-5" />
+            </button>
 
-                <div className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 text-sm font-bold text-white">
-                    {testimonial.name.split(' ').map((n) => n[0]).join('')}
+            {/* Testimonial card with crossfade */}
+            <div className="mx-auto max-w-[600px]">
+              {testimonials.map((testimonial, index) => (
+                <div
+                  key={testimonial.name}
+                  className={cn(
+                    'rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8 transition-all duration-700',
+                    index === activeIndex
+                      ? 'opacity-100 scale-100'
+                      : 'opacity-0 scale-95 absolute inset-0 pointer-events-none'
+                  )}
+                  style={{
+                    position: index === activeIndex ? 'relative' : 'absolute',
+                  }}
+                >
+                  {/* Star rating */}
+                  <div className="mb-5 flex gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={cn(
+                          'size-5',
+                          i < testimonial.rating
+                            ? 'fill-amber-400 text-amber-400'
+                            : 'fill-stone-700 text-stone-700'
+                        )}
+                      />
+                    ))}
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white">{testimonial.name}</p>
-                    <p className="text-xs text-stone-400">
-                      {testimonial.role}, {testimonial.company}
-                    </p>
-                    <p className="text-xs text-stone-500">{testimonial.location}</p>
+
+                  <p className="text-base leading-relaxed text-stone-300">
+                    &ldquo;{testimonial.text}&rdquo;
+                  </p>
+
+                  <div className="mt-6 flex items-center gap-4 border-t border-white/10 pt-5">
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 text-sm font-bold text-white">
+                      {testimonial.name.split(' ').map((n) => n[0]).join('')}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-white">{testimonial.name}</p>
+                      <p className="text-xs text-stone-400">
+                        {testimonial.role}, {testimonial.company}
+                      </p>
+                      <p className="text-xs text-stone-500">{testimonial.location}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Dot indicators */}
+            <div className="mt-10 flex items-center justify-center gap-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToIndex(index)}
+                  className={cn(
+                    'h-2 rounded-full transition-all duration-300',
+                    index === activeIndex
+                      ? 'w-6 bg-teal-400'
+                      : 'w-2 bg-stone-600 hover:bg-stone-500'
+                  )}
+                  aria-label={`Go to testimonial ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -466,7 +557,7 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
             </p>
           </div>
 
-          <div className="grid gap-6 sm:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <div
               className="card-modern group cursor-pointer rounded-2xl border border-stone-200 bg-white p-6"
               onClick={() => onNavigate('grades')}
@@ -516,6 +607,23 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
                 Download PDF
                 <ArrowRight className="ml-1 size-3.5" />
               </a>
+            </div>
+
+            <div
+              className="card-modern group cursor-pointer rounded-2xl border border-stone-200 bg-white p-6"
+              onClick={() => onNavigate('quotation')}
+            >
+              <div className="h-12 w-12 rounded-xl bg-emerald-50 flex items-center justify-center mb-5 group-hover:bg-emerald-100 transition-colors">
+                <FileText className="h-6 w-6 text-emerald-600" />
+              </div>
+              <h3 className="text-lg font-bold text-stone-900 mb-2">Quotation Generator</h3>
+              <p className="text-sm leading-relaxed text-stone-500">
+                Create professional PDF quotations for your clients with auto-calculated GST and totals.
+              </p>
+              <p className="mt-4 flex items-center text-sm font-semibold text-primary">
+                Create Quotation
+                <ArrowRight className="ml-1 size-3.5" />
+              </p>
             </div>
           </div>
         </div>
