@@ -74,54 +74,63 @@ const whyChooseUs = [
   },
 ]
 
-const testimonials = [
-  {
-    name: 'Rajesh Kumar',
-    role: 'Project Head',
-    company: 'Ganges Construction',
-    location: 'Kolkata, WB',
-    text: 'Omkara Commercial has been our go-to steel supplier for over 5 years. Their consistent quality and on-time delivery have been instrumental in keeping our projects on track.',
-    rating: 5,
-  },
-  {
-    name: 'Anita Sharma',
-    role: 'Purchase Manager',
-    company: 'FabTech Industries',
-    location: 'Jamshedpur, JH',
-    text: 'Excellent service and competitive pricing. The team at Omkara understands our requirements perfectly and always delivers exactly what we need.',
-    rating: 5,
-  },
-  {
-    name: 'Vikram Singh',
-    role: 'Director',
-    company: 'Singh Infrastructure',
-    location: 'Patna, BR',
-    text: 'We switched to Omkara Commercial two years ago and it was the best decision. Their dispatch times are unmatched and the mill test certificates give us complete peace of mind.',
-    rating: 5,
-  },
-]
+interface TestimonialItem {
+  id: number
+  name: string
+  role: string | null
+  company: string | null
+  location: string | null
+  text: string
+  rating: number
+  sortOrder: number
+}
 
 export function HomeSection({ onNavigate }: HomeSectionProps) {
+  // Testimonials data
+  const [testimonials, setTestimonials] = useState<TestimonialItem[]>([])
+  const [testimonialsLoading, setTestimonialsLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch('/api/testimonials')
+        if (!res.ok) throw new Error('Failed to fetch testimonials')
+        const data = await res.json()
+        if (!cancelled) {
+          setTestimonials(data.testimonials ?? [])
+          setTestimonialsLoading(false)
+        }
+      } catch {
+        if (!cancelled) {
+          setTestimonials([])
+          setTestimonialsLoading(false)
+        }
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
+
   // Carousel state
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const goToIndex = useCallback((index: number) => {
-    setActiveIndex(index % testimonials.length)
-  }, [])
+    setActiveIndex(index % Math.max(testimonials.length, 1))
+  }, [testimonials.length])
 
   const goNext = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % testimonials.length)
-  }, [])
+    setActiveIndex((prev) => (prev + 1) % Math.max(testimonials.length, 1))
+  }, [testimonials.length])
 
   const goPrev = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-  }, [])
+    setActiveIndex((prev) => (prev - 1 + Math.max(testimonials.length, 1)) % Math.max(testimonials.length, 1))
+  }, [testimonials.length])
 
   // Auto-rotation
   useEffect(() => {
-    if (isPaused) {
+    if (isPaused || testimonials.length === 0) {
       if (intervalRef.current) clearInterval(intervalRef.current)
       return
     }
@@ -129,7 +138,7 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current)
     }
-  }, [isPaused, goNext])
+  }, [isPaused, goNext, testimonials.length])
 
   return (
     <div className="w-full">
@@ -474,9 +483,31 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
 
             {/* Testimonial card with crossfade */}
             <div className="mx-auto max-w-[600px]">
+              {testimonialsLoading ? (
+                <div className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8">
+                  <div className="mb-5 flex gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <div key={i} className="h-5 w-5 rounded bg-white/10 animate-pulse" />
+                    ))}
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-4 w-full rounded bg-white/10 animate-pulse" />
+                    <div className="h-4 w-4/5 rounded bg-white/10 animate-pulse" />
+                    <div className="h-4 w-3/5 rounded bg-white/10 animate-pulse" />
+                  </div>
+                  <div className="mt-6 flex items-center gap-4 border-t border-white/10 pt-5">
+                    <div className="h-12 w-12 shrink-0 rounded-full bg-white/10 animate-pulse" />
+                    <div className="space-y-2">
+                      <div className="h-3 w-28 rounded bg-white/10 animate-pulse" />
+                      <div className="h-3 w-40 rounded bg-white/10 animate-pulse" />
+                    </div>
+                  </div>
+                </div>
+              ) : testimonials.length === 0 ? null : (
+              <>
               {testimonials.map((testimonial, index) => (
                 <div
-                  key={testimonial.name}
+                  key={testimonial.id}
                   className={cn(
                     'rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8 transition-all duration-700',
                     index === activeIndex
@@ -520,9 +551,12 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
                   </div>
                 </div>
               ))}
+              </>
+              )}
             </div>
 
             {/* Dot indicators */}
+            {!testimonialsLoading && testimonials.length > 0 && (
             <div className="mt-10 flex items-center justify-center gap-2">
               {testimonials.map((_, index) => (
                 <button
@@ -538,6 +572,7 @@ export function HomeSection({ onNavigate }: HomeSectionProps) {
                 />
               ))}
             </div>
+            )}
           </div>
         </div>
       </section>

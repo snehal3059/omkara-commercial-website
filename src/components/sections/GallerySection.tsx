@@ -4,50 +4,44 @@ import { useState, useCallback, useEffect } from 'react'
 import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 
-const galleryItems = [
-  {
-    src: '/warehouse-interior.jpg',
-    title: 'Our Warehouse',
-    description:
-      'Well-organized 10,000 sq.ft. warehouse in Howrah with ready stock',
-  },
-  {
-    src: '/steel-delivery.jpg',
-    title: 'Fast Delivery',
-    description:
-      'Dedicated logistics for timely delivery across Eastern India',
-  },
-  {
-    src: '/steel-yard.jpg',
-    title: 'Steel Yard',
-    description:
-      'Premium MS products from SAIL, TATA Steel, and other top manufacturers',
-  },
-  {
-    src: '/construction-site.jpg',
-    title: 'Project Supply',
-    description:
-      'Bulk steel supply for large-scale construction projects',
-  },
-  {
-    src: '/quality-control.jpg',
-    title: 'Quality Assurance',
-    description:
-      'Every product inspected with mill test certificates',
-  },
-  {
-    src: '/ms-plate.jpg',
-    title: 'Product Range',
-    description:
-      'Comprehensive range of MS sheets, plates, beams, channels, and more',
-  },
-]
+interface GalleryItem {
+  id: number
+  title: string
+  description: string | null
+  src: string
+  sortOrder: number
+}
 
 export function GallerySection() {
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch('/api/gallery')
+        if (!res.ok) throw new Error('Failed to fetch gallery')
+        const data = await res.json()
+        if (!cancelled) {
+          setGalleryItems(data.images ?? [])
+          setIsLoading(false)
+        }
+      } catch {
+        if (!cancelled) {
+          setHasError(true)
+          setIsLoading(false)
+        }
+      }
+    })()
+    return () => { cancelled = true }
+  }, [])
 
   const openLightbox = useCallback((index: number) => {
     setActiveIndex(index)
@@ -63,17 +57,19 @@ export function GallerySection() {
 
   const goToPrev = useCallback(() => {
     setActiveIndex((prev) =>
-      prev !== null
+      prev !== null && galleryItems.length > 0
         ? (prev - 1 + galleryItems.length) % galleryItems.length
         : null
     )
-  }, [])
+  }, [galleryItems.length])
 
   const goToNext = useCallback(() => {
     setActiveIndex((prev) =>
-      prev !== null ? (prev + 1) % galleryItems.length : null
+      prev !== null && galleryItems.length > 0
+        ? (prev + 1) % galleryItems.length
+        : null
     )
-  }, [])
+  }, [galleryItems.length])
 
   // Keyboard navigation
   useEffect(() => {
@@ -115,6 +111,25 @@ export function GallerySection() {
         </div>
 
         {/* ── Gallery Grid ── */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className={cn(
+                  'overflow-hidden rounded-xl',
+                  i === 0 && 'sm:col-span-2 lg:col-span-2'
+                )}
+              >
+                <Skeleton className="aspect-[4/3] w-full" />
+              </div>
+            ))}
+          </div>
+        ) : hasError ? (
+          <p className="text-center text-stone-500">
+            Unable to load gallery images. Please try again later.
+          </p>
+        ) : galleryItems.length === 0 ? null : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {galleryItems.map((item, index) => (
             <div
@@ -170,6 +185,7 @@ export function GallerySection() {
             </div>
           ))}
         </div>
+        )}
       </div>
 
       {/* ── Lightbox ── */}

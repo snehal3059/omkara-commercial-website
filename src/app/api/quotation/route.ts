@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import PDFDocument from "pdfkit"
+import { db } from "@/lib/db"
 
 interface QuotationItem {
   product: string
@@ -48,6 +49,48 @@ export async function POST(request: NextRequest) {
 
     const quotationNumber = `QT-OC-${Date.now()}`
     const quotationDate = providedDate || new Date().toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })
+
+    // ── Calculate totals for DB storage ──
+    const subtotal = items.reduce((sum, item) => {
+      const qty = parseFloat(item.quantity) || 0
+      const rate = parseFloat(item.rate) || 0
+      return sum + qty * rate
+    }, 0)
+    const gst = subtotal * 0.18
+    const grandTotal = subtotal + gst
+
+    // ── Save quotation to database (non-blocking) ──
+    try {
+      await db.quotation.create({
+        data: {
+          quoteNumber: quotationNumber,
+          customerName,
+          companyName: companyName || null,
+          email: email || null,
+          phone: phone || null,
+          address: address || null,
+          notes: notes || null,
+          subtotal,
+          gst,
+          grandTotal,
+          status: "draft",
+          items: {
+            create: items.map((item, index) => ({
+              product: item.product,
+              specification: item.specification || null,
+              quantity: parseFloat(item.quantity) || 0,
+              unit: item.unit,
+              rate: parseFloat(item.rate) || 0,
+              amount: (parseFloat(item.quantity) || 0) * (parseFloat(item.rate) || 0),
+              sortOrder: index,
+            })),
+          },
+        },
+      })
+    } catch (dbError) {
+      console.error("Failed to save quotation to database:", dbError)
+      // Continue with PDF generation even if DB save fails
+    }
 
     const pdfDoc = new PDFDocument({
       size: "A4",
@@ -162,13 +205,11 @@ export async function POST(request: NextRequest) {
 
     // Table rows
     let rowY = tableTop + rowHeight
-    let subtotal = 0
 
     items.forEach((item, index) => {
       const qty = parseFloat(item.quantity) || 0
       const rate = parseFloat(item.rate) || 0
       const amount = qty * rate
-      subtotal += amount
 
       // Alternating row background
       if (index % 2 === 0) {
@@ -213,7 +254,6 @@ export async function POST(request: NextRequest) {
     pdfDoc.text(`₹ ${formatINR(subtotal)}`, x + 530, totalsStart + 6, { width: 108, align: "right" })
 
     // GST
-    const gst = subtotal * 0.18
     pdfDoc.rect(x + 430, totalsStart + 24, 210, 22).fill("#f8fffe")
     pdfDoc.fontSize(9).font("Helvetica").fillColor(GRAY)
     pdfDoc.text("GST (18%):", x + 434, totalsStart + 30, { width: 100, align: "left" })
@@ -221,7 +261,6 @@ export async function POST(request: NextRequest) {
     pdfDoc.text(`₹ ${formatINR(gst)}`, x + 530, totalsStart + 30, { width: 108, align: "right" })
 
     // Grand Total
-    const grandTotal = subtotal + gst
     pdfDoc.rect(x + 430, totalsStart + 48, 210, 26).fill(PRIMARY)
     pdfDoc.fontSize(10).font("Helvetica-Bold").fillColor("#ffffff")
     pdfDoc.text("Grand Total:", x + 434, totalsStart + 54, { width: 100, align: "left" })
@@ -286,6 +325,37 @@ export async function POST(request: NextRequest) {
     console.error("Quotation generation error:", error)
     return NextResponse.json(
       { error: "Failed to generate quotation PDF" },
+      { status: 500 }
+    )
+  }
+}
+
+export async function GET() {
+  try {
+    const quotations = await db.quotation.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+      include: {
+        items: {
+          orderBy: { sortOrder: "asc" },
+        },
+      },
+    })
+
+    const serialized = quotations.map((q) => ({
+      ...q,
+      createdAt: q.createdAt.toISOString(),
+      updatedAt: q.updatedAt.toISOString(),
+      items: q.items.map((item) => ({
+        ...item,
+      })),
+    }))
+
+    return NextResponse.json({ quotations: serialized })
+  } catch (error) {
+    console.error("Failed to fetch quotations:", error)
+    return NextResponse.json(
+      { error: "Failed to fetch quotations" },
       { status: 500 }
     )
   }

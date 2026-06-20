@@ -441,3 +441,268 @@ Stage Summary:
 - 6 images: warehouse, delivery, yard, construction, quality, products
 - Fullscreen lightbox with prev/next navigation and keyboard support
 - Responsive design: 1 col mobile, 2 col tablet, 3 col desktop
+
+---
+
+## Task 7 — Gallery & Testimonials API Routes (full-stack-developer)
+
+**Date**: 2025-01-01
+
+### Summary
+Created two GET API routes that read from the SQLite database via Prisma:
+
+1. **`/api/gallery` (GET)** — Returns all active gallery images ordered by `sortOrder` ascending. Queries `db.galleryImage` with `where: { active: true }`.
+
+2. **`/api/testimonials` (GET)** — Returns all active testimonials ordered by `sortOrder` ascending. Queries `db.testimonial` with `where: { active: true }`.
+
+### Files Created
+- `src/app/api/gallery/route.ts`
+- `src/app/api/testimonials/route.ts`
+
+### Notes
+- Both routes import `db` from `@/lib/db` (Prisma client).
+- Lint passes with no errors.
+- Neither file existed previously — no conflicts with Task 6 agent.
+
+---
+
+## Task 5 (update) — Quotation API DB Persistence (full-stack-developer)
+
+**Date**: 2025-01-01
+
+### Summary
+Updated `/api/quotation` to persist every generated quotation to the SQLite database via Prisma, and added a new GET endpoint.
+
+### Changes Made
+
+1. **POST handler — DB save before PDF generation**:
+   - Added `import { db } from "@/lib/db"`.
+   - Extracted subtotal/gst/grandTotal calculation to run before PDF generation (moved out of the PDF loop into a `reduce()` call).
+   - Added `db.quotation.create()` with nested `items.create[]` inside a try-catch — if DB save fails, PDF generation still proceeds.
+   - All existing PDF generation logic preserved exactly as-is (same layout, same colors, same helper functions).
+
+2. **New GET handler**:
+   - Returns `{ quotations: [...] }` with up to 50 quotations ordered by `createdAt desc`.
+   - Includes all related `QuotationItem` records (ordered by `sortOrder asc`).
+   - Serializes `createdAt` and `updatedAt` as ISO strings.
+
+### File Modified
+- `src/app/api/quotation/route.ts`
+
+### Notes
+- Lint passes with zero errors.
+- DB save is non-blocking (wrapped in try-catch) so PDF generation always succeeds.
+- Prisma schema already had `Quotation` and `QuotationItem` models — no schema changes needed.
+
+---
+
+## Task 6 — Lead/CRM & Admin Dashboard API Routes (full-stack-developer)
+
+**Date**: 2025-01-01
+
+### Summary
+Created 3 new API route files (leads, leads/[id], and rewrote gallery/testimonials with full CRUD), and updated 2 existing files (admin/data, inquiry) to support Lead/CRM and Admin Dashboard features.
+
+### Files Created
+
+1. **`src/app/api/leads/route.ts`**
+   - **GET**: Returns all leads ordered by `updatedAt desc`, supports `?status=` filter param, includes `_count.activities` as `activityCount`, serializes dates as ISO strings.
+   - **POST**: Creates a new lead with validated `source` (one of: inquiry, contact, whatsapp, quotation, referral, website). Auto-creates an initial `LeadActivity` of type "note" with content "Lead created from {source}". Returns the created lead with activity count.
+
+2. **`src/app/api/leads/[id]/route.ts`**
+   - **PATCH**: Updates lead fields (status, notes, followUpDate, value). If `status` changed, auto-creates a `LeadActivity` with type "status_change". Re-fetches after activity creation to include updated count.
+   - **DELETE**: Deletes lead (activities cascade automatically). Returns `{ success: true }`.
+   - **POST**: Adds a new activity to a lead. Validates `type` (one of: call, email, meeting, note, status_change). Verifies lead exists before creating activity.
+
+3. **`src/app/api/gallery/route.ts`** (rewritten — previously GET-only)
+   - **GET**: Returns all active gallery images ordered by `sortOrder asc`.
+   - **POST**: Creates a new gallery image (requires `title` and `src`).
+   - **PATCH**: Updates a gallery image by id.
+   - **DELETE**: Deletes a gallery image by id.
+
+4. **`src/app/api/testimonials/route.ts`** (rewritten — previously GET-only)
+   - **GET**: Returns all active testimonials ordered by `sortOrder asc`.
+   - **POST**: Creates a new testimonial (requires `name` and `text`, defaults `rating` to 5).
+   - **PATCH**: Updates a testimonial by id.
+   - **DELETE**: Deletes a testimonial by id.
+
+### Files Updated
+
+5. **`src/app/api/admin/data/route.ts`** — Added three new data sections to the existing GET endpoint:
+   - `leadCounts`: Group-by query on Lead model returning counts per status.
+   - `quotationCount`, `totalQuotationValue`, `recentQuotations`: Quotation aggregate data with last 5 quotations including item counts.
+   - `steelRatesLastUpdate`: Latest `SteelRate.createdAt` timestamp.
+
+6. **`src/app/api/inquiry/route.ts`** — After creating an inquiry, also creates a `Lead` record with `source="inquiry"`, `sourceId` set to the inquiry ID, and an initial activity note including the inquiry number and product title.
+
+### Notes
+- All routes use `NextRequest`/`NextResponse` from `next/server`.
+- Error handling with try-catch on all endpoints.
+- Lint passes with zero errors.
+- Dev server compiles successfully with no runtime errors.
+
+---
+Task ID: 4
+Agent: full-stack-developer
+Task: Rewrite /api/steel-rates to use Prisma + SQLite instead of in-memory caching
+
+Work Log:
+- Replaced in-memory cache (`cachedResponse` / `cacheTimestamp`) with Prisma SQLite lookups
+- Added `getTodayRates()` — queries `SteelRate` table for today's date string
+- Added `saveRates()` — persists parsed web search results as `SteelRate` records in a transaction, compares with yesterday's DB data to calculate accurate trend (up/down/stable with ₹0.5/kg threshold)
+- Added `getHistoryRates(nDays)` — fetches rates for the last N days, returns structured data with dates array and per-product low/high arrays
+- Added `?history=N` query param support — appends `history` object to the JSON response
+- Kept existing ZAI web search as fallback when DB has no data for today
+- Kept same response format for backwards compatibility (`updated`, `rates`, `disclaimer`)
+- Removed `CACHE_TTL` and in-memory variables entirely
+- Route signature changed from `GET()` to `GET(request: NextRequest)` to access query params
+
+Stage Summary:
+- Steel rates now persist in SQLite — subsequent same-day requests skip web search entirely
+- `GET /api/steel-rates` returns today's rates (from DB or web search)
+- `GET /api/steel-rates?history=7` returns rates + 7-day trend data
+- Trend is calculated by comparing mid-price with previous day's DB records
+- Fallback to hardcoded rates on any error
+- Lint passes with zero errors
+
+---
+
+## Task 8 — Dynamic Data Fetching for Gallery & Testimonials (full-stack-developer)
+
+**Date**: 2025-01-01
+
+### Summary
+Updated two frontend components to replace hardcoded data arrays with dynamic API fetching from database-backed endpoints.
+
+### Changes
+
+#### 1. `src/components/sections/GallerySection.tsx`
+- Removed hardcoded `galleryItems` array (6 items)
+- Added `GalleryItem` interface for type safety
+- Added `useState` for `galleryItems`, `isLoading`, and `hasError`
+- Added `useEffect` with async fetch to `/api/gallery` (with cancellation guard)
+- Added skeleton loading grid (6 skeleton placeholders matching the grid layout, first item spans 2 columns)
+- Added error fallback message: "Unable to load gallery images. Please try again later."
+- Added empty state: section hidden when `galleryItems.length === 0`
+- Updated `goToPrev`/`goToNext` callbacks to depend on `galleryItems.length` and guard against empty array
+- All lightbox, keyboard navigation, hover overlay, and grid layout logic preserved exactly
+
+#### 2. `src/components/sections/HomeSection.tsx`
+- Removed hardcoded `testimonials` array (3 items)
+- Added `TestimonialItem` interface for type safety
+- Added `useState` for `testimonials` and `testimonialsLoading`
+- Added `useEffect` with async fetch to `/api/testimonials` (with cancellation guard)
+- On fetch failure, falls back to empty array (carousel simply doesn't render)
+- Added skeleton loading placeholder in the carousel area (pulsing stars, text lines, avatar, name block)
+- Updated `goToIndex`/`goNext`/`goPrev` to use `Math.max(testimonials.length, 1)` to avoid division by zero
+- Updated auto-rotation `useEffect` to stop when `testimonials.length === 0`
+- Dot indicators only rendered when testimonials are loaded and non-empty
+- All carousel logic (crossfade animation, auto-rotation, pause on hover, prev/next buttons) preserved
+
+### Files Modified
+- `src/components/sections/GallerySection.tsx`
+- `src/components/sections/HomeSection.tsx`
+
+### Notes
+- Lint passes with zero errors.
+- Both components use existing API routes (`/api/gallery` GET and `/api/testimonials` GET) that were created in prior tasks.
+- `GallerySection` imports `Skeleton` from `@/components/ui/skeleton`.
+- No other files or components were modified.
+
+---
+
+## Task 9 — DashboardSection Component (full-stack-developer)
+
+**Date**: 2025-01-01
+
+### Summary
+Built a comprehensive Lead Tracker / CRM Dashboard as a client-side component with four major sections: Stats Row, Kanban Pipeline, Lead Detail Panel, and Recent Quotations Table.
+
+### Features Implemented
+
+1. **Stats Row (4 cards)** — Fetches from `/api/admin/data` and displays:
+   - Total Leads (aggregate of all status counts)
+   - Active Inquiries (new + contacted)
+   - Quotations Sent (count + total value in ₹)
+   - Steel Rates Last Updated (formatted date)
+   - Each card with lucide-react icon, loading skeleton, hover shadow effect
+
+2. **Lead Pipeline (Kanban Board)** — Fetches from `/api/leads` and renders 6 columns (New, Contacted, Qualified, Proposal, Won, Lost) with:
+   - Horizontal scrollable layout with custom scrollbar
+   - Lead cards showing name, company, phone, source badge, value (₹), relative time, activity count
+   - Color-coded source badges (inquiry=teal, contact=blue, whatsapp=green, quotation=amber, referral=purple, website=stone)
+   - Column lead count badges
+   - Click-to-open detail panel
+   - Empty column state with dashed border placeholder
+
+3. **Lead Detail Panel (Sheet slide-over)** — Uses shadcn/ui Sheet component:
+   - Full lead info display (name, email, phone, company, source, value, follow-up date, created time)
+   - Status dropdown (Select component) — calls PATCH /api/leads/[id] to change status, auto-refreshes pipeline
+   - Add Activity form — Select type (call/email/meeting/note) + Textarea for content, POST to /api/leads/[id]
+   - Activity Timeline with type icons, relative timestamps, and content
+   - Notes section displayed when present
+   - Loading skeleton while fetching lead detail
+   - ScrollArea for long detail panels
+
+4. **Recent Quotations Table** — Fetches from `/api/admin/data` (recentQuotations):
+   - Compact table with Quote #, Customer (name + company), Date, Amount, Status
+   - Color-coded status badges (draft=gray, sent=blue, accepted=green, rejected=red, expired=orange)
+   - Responsive: date column hidden on mobile
+   - Empty state when no quotations exist
+
+### API Enhancement
+- Added `GET /api/leads/[id]` endpoint to fetch a single lead with all its activities (ordered by createdAt desc). This was needed for the detail panel activity timeline.
+
+### Integration
+- Added "Dashboard" navigation item to Header component
+- Added `case "dashboard"` route in page.tsx rendering DashboardSection
+
+### Design Language
+- Teal primary (#0d9488), amber accent (#d97706), stone neutrals
+- shadcn/ui New York style components
+- Responsive: mobile-first, horizontal scroll for kanban on small screens
+- Proper loading skeletons for all sections
+- Currency formatting with Intl.NumberFormat en-IN
+- Relative time formatting with date-fns formatDistanceToNow
+- Custom scrollbar styling (custom-scrollbar class)
+
+### Files Modified
+- `src/components/sections/DashboardSection.tsx` — New file, main dashboard component
+- `src/app/api/leads/[id]/route.ts` — Added GET handler for single lead with activities
+- `src/app/page.tsx` — Added dashboard route
+- `src/components/Header.tsx` — Added Dashboard nav item
+
+### Notes
+- Lint passes with zero errors.
+- Component exported as `export function DashboardSection()` as required.
+- All data fetching uses client-side useEffect + useCallback patterns matching existing codebase conventions.
+
+---
+Task ID: 2-11
+Agent: Main Coordinator
+Task: Migrate entire backend to Prisma + SQLite with comprehensive DB schema
+
+Work Log:
+- Designed comprehensive Prisma schema with 8 models: Inquiry, Contact, SteelRate, Quotation, QuotationItem, Lead, LeadActivity, GalleryImage, Testimonial
+- Pushed schema to SQLite via `prisma db push`, generated Prisma client
+- Created seed script and seeded 6 gallery images, 5 testimonials, 8 steel rate records
+- Migrated steel-rates API: DB-first caching (checks DB before web search), saves fetched rates to DB, supports `?history=N` for trend data
+- Migrated quotation API: saves every generated quotation + line items to DB before PDF generation, added GET handler for listing quotations
+- Built Lead/CRM API: full CRUD for leads (`/api/leads`), lead detail with activities (`/api/leads/[id]`), gallery CRUD, testimonials CRUD
+- Updated admin/data API: now returns leadCounts, quotationCount, totalQuotationValue, recentQuotations, steelRatesLastUpdate
+- Updated inquiry API: auto-creates Lead record on inquiry submission
+- Updated contact API: auto-creates Lead record on contact form submission
+- Updated GallerySection.tsx: fetches from `/api/gallery` instead of hardcoded array, with loading/error states
+- Updated HomeSection.tsx: fetches testimonials from `/api/testimonials` instead of hardcoded array, with loading state
+- Built DashboardSection.tsx: full CRM dashboard with stats cards, kanban lead pipeline (6 columns), lead detail slide-over with activity timeline, status management, recent quotations table
+- Added "Dashboard" nav item to Header.tsx, wired into page.tsx
+- Verified all APIs return correct data via curl
+- Verified visual rendering via agent-browser screenshots + VLM analysis
+- All lint checks pass clean
+
+Stage Summary:
+- 8 Prisma models covering all business data
+- 10 API routes (steel-rates, quotation, leads, leads/[id], gallery, testimonials, contact, inquiry, admin/data, catalogue)
+- All data persisted in SQLite at /home/z/my-project/db/custom.db
+- Dashboard accessible from nav with real-time stats, lead pipeline, quotation tracking
+- Gallery and testimonials now DB-driven (add/remove via API without code changes)

@@ -14,6 +14,7 @@ import { FAQSection } from "@/components/sections/FAQSection"
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp"
 import { ScrollProgressBar } from "@/components/ScrollProgressBar"
 import { AnnouncementBanner } from "@/components/AnnouncementBanner"
+import { DashboardSection } from "@/components/sections/DashboardSection"
 
 export default function Page() {
   const [activePage, setActivePage] = useState("home")
@@ -52,6 +53,8 @@ export default function Page() {
         return <WeightCalculatorSection />
       case "quotation":
         return <QuotationGenerator />
+      case "dashboard":
+        return <DashboardSection />
       default:
         return (
           <>

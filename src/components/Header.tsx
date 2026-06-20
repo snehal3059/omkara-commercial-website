@@ -13,6 +13,7 @@ const navigation = [
   { name: "Quotation", key: "quotation" },
   { name: "About Us", key: "about" },
   { name: "Contact", key: "contact" },
+  { name: "Dashboard", key: "dashboard" },
 ]
 
 interface HeaderProps {

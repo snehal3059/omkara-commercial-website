@@ -1,0 +1,567 @@
+     1→# Worklog
+     2→
+     3→## Task 5 — API Routes (full-stack-developer)
+     4→
+     5→**Date**: 2025-01-01
+     6→
+     7→### Summary
+     8→Created four API routes for the steel traders application:
+     9→
+    10→1. **`/api/inquiry` (POST)** — Accepts product inquiry submissions. Validates required fields (name, email, phone), maps snake_case request body fields to camelCase Prisma fields (productSlug, productTitle), and stores optional fields (company, quantity, message) as nullable values.
+    11→
+    12→2. **`/api/contact` (POST)** — Accepts general contact form submissions. Validates required fields (name, email, message), stores optional fields (phone, subject) as nullable values.
+    13→
+    14→3. **`/api/admin/data` (GET)** — Retrieves the latest 100 inquiries and 100 contacts from the database, ordered by creation date descending. Maps camelCase Prisma fields back to snake_case for the JSON response, and serializes Date fields to ISO strings.
+    15→
+    16→4. **`/api/catalogue` (GET)** — Generates a PDF product catalogue using `pdf-lib`. Includes a cover page, table of contents, and per-category product pages with specifications. Imports product data from `@/lib/product-data`. Returns the PDF as a downloadable attachment.
+    17→
+    18→### Files Created
+    19→- `src/app/api/inquiry/route.ts`
+    20→- `src/app/api/contact/route.ts`
+    21→- `src/app/api/admin/data/route.ts`
+    22→- `src/app/api/catalogue/route.ts`
+    23→
+    24→### Notes
+    25→- All routes import `db` from `@/lib/db` (Prisma client).
+    26→- Lint passes with no errors.
+    27→- The catalogue route uses `fs` and `path` for reading product images from `public/`.
+    28→
+    29→---
+    30→
+    31→## Task 7-f — ContactSection Component (full-stack-developer)
+    32→
+    33→**Date**: 2025-01-01
+    34→
+    35→### Summary
+    36→Created the `ContactSection` component (`src/components/sections/ContactSection.tsx`) — a "use client" component for the Contact page of OMKARA COMMERCIAL PVT. LTD.
+    37→
+    38→### Features Implemented
+    39→1. **Banner** — Dark gradient (`from-gray-900 via-gray-800 to-gray-900`) with "Contact Us" heading and subtitle text.
+    40→2. **Two-column layout** (`lg:grid-cols-3`):
+    41→   - **Left column (2/3)** — Contact form with fields: Full Name, Email, Phone, Company Name, Subject, Message. POSTs to `/api/contact`. Shows loading state (Loader2 spinner) and success state (Check icon + "Message Sent!"). Uses shadcn/ui `Button`, `Input`, `Textarea`, `Label`, `Card`, `CardContent`.
+    42→   - **Right column (1/3)** — Contact Information card (Address with Google Maps link, 2 phone numbers, 2 email addresses, working hours Mon-Sat 9AM-7PM) and Quick Inquiry card with WhatsApp button linking to `wa.me/919123857784`.
+    43→3. **Icons** — `Phone`, `Mail`, `MapPin`, `MessageCircle`, `Clock`, `Check`, `Loader2` from lucide-react.
+    44→4. **Responsive** — Stacks vertically on mobile, side-by-side on desktop. Form fields use `sm:grid-cols-2` for two-up layout.
+    45→5. **Accessibility** — Semantic `<section>`, `<form>`, proper `<Label>` with `htmlFor`, `required` attributes on mandatory fields.
+    46→
+    47→### File Created
+    48→- `src/components/sections/ContactSection.tsx`
+    49→
+    50→### Notes
+    51→- Exported as `export function ContactSection()`.
+    52→- Lint passes with no errors.
+    53→- Dev server compiles successfully.
+    54→
+    55→## Task 7-c — HomeSection Component (full-stack-developer)
+    56→
+    57→**Date**: 2025-01-01
+    58→
+    59→### Summary
+    60→Created `src/components/sections/HomeSection.tsx` as a comprehensive "use client" component for the OMKARA COMMERCIAL PVT. LTD. homepage. The component receives an `onNavigate: (page: string) => void` prop and renders 8 sub-sections:
+    61→
+    62→1. **Hero Section** — Dark gradient background (from-slate-900 via-blue-950 to-slate-900) with location/est. year badge, heading with "Iron & Steel Trading" in text-blue-400, description, and two CTA buttons ("Explore Products" → `onNavigate("products")`, "Get a Quote" → `onNavigate("contact")`).
+    63→2. **Manufacturer Logos** — 5-card grid (SAIL, TATA Steel, GAGAN GOLD, SHYAM SEL, ELEGANT) using Card/CardContent with hover effects.
+    64→3. **Introduction** — Two-column layout: left column with company welcome heading and history paragraphs; right column with stats grid (15+ Years, 500+ Products, 1000+ Clients) and legacy card ("Est. 2008 by Shri Somnath Gupta, Under 2nd Generation Leadership").
+    65→4. **Product Categories** — 7 clickable cards (MS Sheet, MS Plate, MS Beam, MS Channel, MS Angle, MS Round, MS Hollow Pipes) with emoji icons, descriptions, and hover "View Products" text. All navigate via `onNavigate("products")`.
+    66→5. **Why Choose Us** — 4 feature cards: Premium Quality (BadgeCheck), <48 Hrs Dispatch (Clock), Best Pricing (ShieldCheck), Expert Support (HeadphonesIcon).
+    67→6. **Testimonials** — 4 cards with star ratings for Rajesh Kumar (Ganges Construction, Kolkata), Anita Sharma (FabTech Industries, Jamshedpur), Vikram Singh (Singh Infrastructure, Patna), Priya Das (East India Engineering, Bhubaneswar).
+    68→7. **Technical Resources** — 3 cards: Grades & Specifications (→ `onNavigate("grades")`), Weight Calculator (→ `onNavigate("weight-calc")`), Product Catalogue (→ `/api/catalogue` link).
+    69→8. **CTA Section** — Blue gradient background, "Ready to Place Your Order?" heading, Contact Us button and WhatsApp button.
+    70→
+    71→### Files Created
+    72→- `src/components/sections/HomeSection.tsx`
+    73→
+    74→### Notes
+    75→- Lint passes with no errors.
+    76→- Uses shadcn/ui Card, CardContent, Button, Badge components.
+    77→- Uses lucide-react icons: BadgeCheck, Clock, ShieldCheck, HeadphonesIcon, Star, ArrowRight, FileText, Calculator, BookOpen, MessageCircle.
+    78→- Responsive design with mobile-first approach (sm:, lg:, xl: breakpoints).
+    79→- All cards have hover transition effects.
+    80→
+    81→---
+    82→
+    83→## Task 7-e — About Section Component (full-stack-developer)
+    84→
+    85→**Date**: 2025-01-01
+    86→
+    87→### Summary
+    88→Created the `AboutSection` component (`src/components/sections/AboutSection.tsx`) for OMKARA COMMERCIAL PVT. LTD. Server-compatible (no `"use client"` directive). Four distinct sub-sections:
+    89→
+    90→1. **Banner** — Dark gradient background (`from-slate-900 via-blue-950 to-slate-900`) with decorative blurred circles, a Badge showing "Howrah, West Bengal | Est. 2008", heading, and subtitle.
+    91→
+    92→2. **Who We Are** — Two-column layout. Left column contains narrative about the company (founded 2008 by Shri Somnath Gupta, specialisation in Flat and Long Structural Products sourced from SAIL, TATA Steel, Gagan Gold, Shyam SEL, Elegant). Right column displays three stat cards (15+ Years, 500+ Products, 1000+ Clients).
+    93→
+    94→3. **Our Values** — Four value cards using shadcn `Card` components with Lucide icons: ShieldCheck (Quality Assurance), Users (Customer First), Building2 (Industry Expertise), Award (Reliability). Cards have hover shadow transition.
+    95→
+    96→4. **What We Offer** — Two-column layout. Left column has a bordered card with two product category lists (Flat Products: HR Sheet, CR Sheet, MS Plate, Chequered Plate; Long Structural: I-Beam, C-Channel, Equal & Unequal Angles, MS Round Bars, Hollow Pipes, Square & Rectangular Hollow Sections). Right column has service highlights with icons (< 48 hrs dispatch, competitive pricing, premium mill sourcing, dedicated account managers).
+    97→
+    98→### Files Created
+    99→- `src/components/sections/AboutSection.tsx`
+   100→
+   101→### Notes
+   102→- Uses shadcn/ui `Card`, `Badge`, `Separator` components.
+   103→- Lucide icons: ShieldCheck, Users, Building2, Award, MapPin, Clock, CheckCircle2.
+   104→- Responsive design with mobile-first breakpoints (sm:, lg:).
+   105→- Lint passes with no errors.
+   106→
+   107→---
+   108→
+   109→## Task 7-g — GradesSection Component (full-stack-developer)
+   110→
+   111→**Date**: 2025-01-01
+   112→
+   113→### Summary
+   114→Created the `GradesSection` component (`src/components/sections/GradesSection.tsx`) — a server component (no `"use client"`) for the Grades & Specifications reference page of the steel trading company.
+   115→
+   116→### Features Implemented
+   117→1. **Grades Data** — Inline array of 6 steel categories with 25 total grade specifications:
+   118→   - Structural Steel (IS 2062) — 4 grades (E250–E450)
+   119→   - Cold Rolled Steel (IS 513) — 3 grades (DQ, DD, EDD)
+   120→   - Hot Rolled Steel (IS 2062 / IS 1079) — 3 grades (HR1–HR3)
+   121→   - Steel Pipes & Tubes — 6 grades (IS 1239, IS 1161, IS 3589, IS 4923, API 5L, ASTM A106)
+   122→   - Engineering Steels (EN Series) — 4 grades (EN8–EN24)
+   123→   - Structural Sections (IS 808) — 4 grades (ISMB, ISMC, Equal/Unequal Angles)
+   124→
+   125→2. **Responsive Tables** — Each category rendered with shadcn/ui `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell`. Columns: Grade, Yield Strength, Tensile Strength, Elongation, Typical Applications. "Typical Applications" column hidden on small screens (`hidden lg:table-cell`). Table headers sticky on scroll (`sticky top-0 z-10 bg-background`). Each property value wrapped in a styled `bg-muted` pill with monospace font.
+   126→
+   127→3. **Mobile Application Disclosure** — Below each table on mobile (`lg:hidden`), a set of collapsible `<details>` elements reveals each grade's application text (since the column is hidden).
+   128→
+   129→4. **Scrollable Tables** — Each table wrapped in a `max-h-[500px] overflow-y-auto custom-scrollbar` container with the project's existing custom scrollbar styling.
+   130→
+   131→5. **Help Box** — Bottom section with gradient background (`from-primary/5 via-primary/5 to-accent/5`) containing a Card with three contact columns: Call Us (2 phone numbers as `tel:` links), Email Us (2 email addresses as `mailto:` links), Working Hours (Mon–Sat 9AM–7PM). Each column has an SVG icon in a `bg-primary/10` circle.
+   132→
+   133→6. **Page Header** — h1 "Grades & Specifications" with descriptive subtitle.
+   134→
+   135→### File Created
+   136→- `src/components/sections/GradesSection.tsx`
+   137→
+   138→### Notes
+   139→- Exported as `export function GradesSection()`.
+   140→- Uses shadcn/ui `Table`, `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `Badge` components.
+   141→- No Lucide icon imports needed — SVG icons rendered inline for server compatibility.
+   142→- Lint passes with no errors.
+   143→- Dev server compiles successfully.
+   144→
+   145→---
+   146→
+   147→## Task 7-h — WeightCalculatorSection Component (full-stack-developer)
+   148→
+   149→**Date**: 2025-01-01
+   150→
+   151→### Summary
+   152→Created the `WeightCalculatorSection` component (`src/components/sections/WeightCalculatorSection.tsx`) — a "use client" component for the Steel Weight Calculator page of OMKARA COMMERCIAL PVT. LTD.
+   153→
+   154→### Features Implemented
+   155→1. **Page Header** — Centered "Steel Weight Calculator" heading (h1) with descriptive subtitle.
+   156→
+   157→2. **Two-column layout** (`lg:grid-cols-5`):
+   158→   - **Left column (3/5)** — Two calculator cards:
+   159→     - **Card 1: Custom Shape Calculator** — Select from 8 shapes (Plate/Sheet, Round/TMT Bar, Pipe/Tube Round, Square Hollow Section, Equal Angle, Unequal Angle, Flat Bar, Square Bar). Dynamic input fields change based on selected shape (all in mm). Quantity input. Calculate and Reset buttons. Results display: weight per meter (kg/m), total weight (kg), total weight (MT). Uses density = 7850 kg/m³ with proper formulas for each shape.
+   160→     - **Card 2: Standard Section Lookup** — Category select (Beams I-Sections, Channels, Equal Angles, TOR/TMT/Rounds). Section select dynamically populated from corresponding `steel-data.ts` arrays. Length (mm) and Quantity inputs. Calculate button. Same results display format.
+   161→   - **Right column (2/5)** — Sticky "Omkara Steel Weight Reference Chart" card. Renders all 13 categories from `allCategories` as expandable accordion sections. Each section has a scrollable table (max-h-64, custom-scrollbar) with Section and Unit Weight columns. Sticky table headers.
+   162→
+   163→3. **Bottom Help Box** — Gradient background card with "Need Accurate Weights for Your Order?" heading, disclaimer text, and contact buttons (phone: +91 91238 57784 as `tel:` link, email: omkaracommercial@gmail.com as `mailto:` link).
+   164→
+   165→4. **Shape Calculation Formulas** (all using mm inputs, density 7850):
+   166→   - Plate: (L/1000) × (W/1000) × (T/1000) × 7850
+   167→   - Round: π × (D/2000)² × (L/1000) × 7850
+   168→   - Pipe: π × ((OD−WT)/1000) × (WT/1000) × (L/1000) × 7850
+   169→   - Square Pipe: 4 × (WT/1000) × ((Side−WT)/1000) × (L/1000) × 7850
+   170→   - Equal Angle: ((2×Leg − Thickness)/1000) × (Thickness/1000) × (L/1000) × 7850
+   171→   - Unequal Angle: ((Leg1 + Leg2 − Thickness)/1000) × (Thickness/1000) × (L/1000) × 7850
+   172→   - Flat Bar: (Width/1000) × (Thickness/1000) × (L/1000) × 7850
+   173→   - Square Bar: (Side/1000) × (Side/1000) × (L/1000) × 7850
+   174→
+   175→### File Created
+   176→- `src/components/sections/WeightCalculatorSection.tsx`
+   177→
+   178→### Notes
+   179→- Exported as `export function WeightCalculatorSection()`.
+   180→- Uses shadcn/ui: `Card`, `CardContent`, `CardDescription`, `CardHeader`, `CardTitle`, `Input`, `Label`, `Select`, `SelectContent`, `SelectItem`, `SelectTrigger`, `SelectValue`, `Button`, `Separator`, `Accordion`, `AccordionContent`, `AccordionItem`, `AccordionTrigger`, `Table`, `TableBody`, `TableCell`, `TableHead`, `TableHeader`, `TableRow`.
+   181→- Uses lucide-react: `Calculator`, `RotateCcw`, `Search`, `Phone`, `Mail`.
+   182→- Imports data from `@/lib/steel-data`: `allCategories`, `beams`, `channels`, `equalAngles`, `rounds`, and `WeightEntry` type.
+   183→- Responsive design with mobile-first breakpoints (sm:, lg:).
+   184→- Lint passes with no errors.
+   185→- Dev server compiles successfully.
+   186→
+   187→---
+   188→
+   189→## Task 7-d — ProductsSection Component (full-stack-developer)
+   190→
+   191→**Date**: 2025-01-01
+   192→
+   193→### Summary
+   194→Created the `ProductsSection` component (`src/components/sections/ProductsSection.tsx`) — a "use client" component that handles both product listing and product detail views for OMKARA COMMERCIAL PVT. LTD. Uses an internal `selectedProduct` state (string | null) to toggle between the two views.
+   195→
+   196→### Features Implemented
+   197→
+   198→1. **Product Listing View** (when `selectedProduct` is null):
+   199→   - **Heading** — "Our Products" with total product count in subtitle.
+   200→   - **Two-column layout** — Sidebar (categories, `lg:w-64`) + main content area.
+   201→   - **Sidebar** — Category card with 8 entries: "All Products" (with total count) + 7 categories (MS Sheet, MS Plate, MS Beam, MS Channel, MS Angle, MS Round, MS Hollow Pipes), each with per-category product count. Active category highlighted with `bg-primary text-primary-foreground`. Initial active category set from `initialCategory` prop.
+   202→   - **Search input** — Filters products by title, description, or category name. Uses Search icon with `pl-9` padding.
+   203→   - **Product grid** — Responsive: 3 columns on xl, 2 on sm, 1 on mobile. Each card: category image (via `getProductImage` helper mapping category slug to `/ms-*.jpg`), Badge with category name, product title, description (`line-clamp-2`), and ArrowRight icon that appears on hover. Clicking a card sets `selectedProduct` to the product slug.
+   204→   - **Empty state** — "No products found matching your criteria." message when filtered list is empty.
+   205→
+   206→2. **Product Detail View** (when `selectedProduct` is set):
+   207→   - **Back navigation** — "Back to Products" button with ArrowLeft icon that clears `selectedProduct`.
+   208→   - **Two-column layout** (`lg:grid-cols-3`): Left column (2/3) + right column (1/3).
+   209→   - **Left column**: Product image (16:9 aspect ratio), category Badge, product title (h1), description, specifications Card (2-column grid with `divide-x`, each spec as key-value row), action buttons (WhatsApp inquiry + Download spec sheet if `pdfUrl` exists).
+   210→   - **WhatsApp integration** — Pre-filled message with product title, description, and request for pricing/availability. Links to `wa.me/919123857784`.
+   211→   - **Right column** — Sticky "Request a Quote" Card with form fields: Full Name, Email, Phone (required), Company, Quantity, Message (optional). POSTs to `/api/inquiry` with snake_case fields. Shows loading state (Loader2 spinner) and success state (Check icon + "Quote Request Sent!" + "Send Another Request" button).
+   212→
+   213→3. **Data source** — `allProductsList` built from `products` Record keys using `Object.entries(products).map(...)`. Category counts computed dynamically.
+   214→
+   215→### Interface
+   216→```tsx
+   217→interface ProductsSectionProps {
+   218→  initialCategory?: string
+   219→}
+   220→```
+   221→
+   222→### Files Created
+   223→- `src/components/sections/ProductsSection.tsx`
+   224→
+   225→### Notes
+   226→- Exported as `export function ProductsSection({ initialCategory }: ProductsSectionProps)`.
+   227→- Uses shadcn/ui: `Card`, `CardContent`, `CardHeader`, `CardTitle`, `Badge`, `Input`, `Textarea`, `Label`, `Button`.
+   228→- Uses lucide-react: `ArrowRight`, `ArrowLeft`, `Search`, `Loader2`, `Check`, `Download`, `MessageCircle`.
+   229→- Product images use Next.js `Image` component with `fill` for listing cards and explicit `width`/`height` for detail view.
+   230→- Lint passes with no errors.
+   231→- Dev server compiles successfully.
+   232→---
+   233→Task ID: 8
+   234→Agent: Main Orchestrator
+   235→Task: Build main SPA page with client-side navigation
+   236→
+   237→Work Log:
+   238→- Created src/app/page.tsx as "use client" component with useState for activePage and productCategory
+   239→- Implemented handleNavigate and handleProductFilter callbacks
+   240→- Rendered Header, main content (switched by activePage), and Footer
+   241→- Connected all 6 section components: HomeSection, ProductsSection, AboutSection, ContactSection, GradesSection, WeightCalculatorSection
+   242→
+   243→Stage Summary:
+   244→- Single-page application with client-side navigation working
+   245→- All 6 pages render correctly with proper navigation
+   246→- Product category filtering from footer works
+   247→- Weight calculator produces correct results (verified: 2000x1000x10mm plate = 157kg)
+   248→
+   249→---
+   250→Task ID: 9
+   251→Agent: Main Orchestrator
+   252→Task: Test and verify the website works
+   253→
+   254→Work Log:
+   255→- Ran ESLint: 0 errors
+   256→- Dev server running with no runtime errors
+   257→- Agent Browser verification of all 6 pages:
+   258→  1. Home: Hero, categories, testimonials, resources, CTA all render
+   259→  2. Products: 88 products with 7 category filters, search, product grid
+   260→  3. Product Detail: Specs, WhatsApp inquiry, quote form
+   261→  4. Contact: Form, contact info, WhatsApp CTA
+   262→  5. Grades: 6 grade categories with tables
+   263→  6. Weight Calculator: Shape calculator, standard section lookup, reference chart
+   264→- Weight calculation verified: 2000x1000x10mm plate = 157kg, 78.5 kg/m
+   265→- No browser console errors
+   266→- No dev server errors
+   267→
+   268→Stage Summary:
+   269→- Website is fully functional and verified
+   270→- All interactive elements work correctly
+   271→- Responsive design with mobile menu
+   272→- Sticky footer implemented
+   273→
+   274→---
+   275→Task ID: 10
+   276→Agent: Main Orchestrator
+   277→Task: Modernize website design and update product images to correlate with product names
+   278→
+   279→Work Log:
+   280→- Analyzed existing codebase: Next.js 16, TypeScript, Tailwind CSS 4, shadcn/ui
+   281→- Generated 7 AI product-correlated images (one per category):
+   282→  - ms-sheet.jpg: Flat mild steel sheets
+   283→  - ms-plate.jpg: Heavy steel plates
+   284→  - ms-beam.jpg: Steel I-beams/H-beams
+   285→  - ms-channel.jpg: Steel C-channels
+   286→  - ms-angle.jpg: Steel L-shaped angles
+   287→  - ms-round.jpg: Steel round bars/rods
+   288→  - ms-pipes.jpg: Steel hollow pipes/tubes
+   289→- Updated globals.css with new color theme (teal + amber palette), custom animations (fade-in-up, float, pulse-glow, shimmer), glassmorphism utilities, card hover effects, text gradient
+   290→- Redesigned Header.tsx: glassmorphism nav, top info bar, modern styling
+   291→- Redesigned HomeSection.tsx: dark cinematic hero with animated gradient orbs, feature cards grid, product category cards with real images, modern testimonials on dark bg, creative CTA
+   292→- Redesigned ProductsSection.tsx: modern filter chips (replacing sidebar), product cards with hover zoom on images, improved detail page layout, better form styling
+   293→- Redesigned Footer.tsx: modern dark footer with clean typography and back-to-top button
+   294→- Updated AboutSection.tsx and ContactSection.tsx to match new color scheme
+   295→- Verified all pages with Agent Browser: no console errors, all interactions work, mobile responsive
+   296→
+   297→Stage Summary:
+   298→- Complete visual redesign with modern teal + amber color palette
+   299→- All 7 product categories now have AI-generated images that correlate with product names
+   300→- New design features: glassmorphism header, animated hero, gradient orbs, filter chips, hover animations
+   301→- All 6 pages verified working with no errors
+   302→
+   303→---
+   304→Task ID: 11
+   305→Agent: Main Orchestrator
+   306→Task: Replace manufacturer text cards with actual logos and remove authorized dealer text
+   307→
+   308→Work Log:
+   309→- Generated 5 AI company logos: SAIL, TATA Steel, Gagan Gold, Shyam Metallics, Elegant
+   310→- Removed "Authorized Distributor for India's Premier Manufacturers" heading from HomeSection
+   311→- Removed "Authorized SAIL & TATA Steel Distributor" text from Header top bar
+   312→- Replaced text-based manufacturer cards with actual logo images in a clean horizontal layout
+   313→- Changed manufacturer name from "SHYAM SEL" to "SHYAM METALLICS" per user request
+   314→- Logos display with 70% opacity, full opacity on hover
+   315→- Verified with browser: no errors, logos render correctly
+   316→
+   317→Stage Summary:
+   318→- 5 manufacturer logos now displayed as images (logo-sail.png, logo-tata-steel.png, logo-gagan-gold.png, logo-shyam-metallics.png, logo-elegant.png)
+   319→- All "Authorized Distributor" / "Authorized Dealer" text removed
+   320→- Clean horizontal logo bar layout with hover effects
+   321→---
+   322→Task ID: 4-11
+   323→Agent: Main Agent
+   324→Task: Add new features to the steel trading website - Floating WhatsApp, FAQ, Scroll Progress Bar, Animated Counters, Google Maps, Announcement Banner
+   325→
+   326→Work Log:
+   327→- Created FloatingWhatsApp.tsx with pulse animation, tooltip, and direct WhatsApp link with pre-filled message
+   328→- Created ScrollProgressBar.tsx with gradient progress indicator (teal to amber)
+   329→- Created AnnouncementBanner.tsx with scrolling marquee text showing offers (free delivery, MTC, bulk pricing)
+   330→- Created FAQSection.tsx with 8 FAQ items (MOQ, MTC, delivery, payments, BIS, custom cuts, GST) and animated counter stats
+   331→- Created useAnimatedCounter.tsx hook with IntersectionObserver and ease-out cubic animation
+   332→- Updated ContactSection.tsx to include Google Maps embed section
+   333→- Updated page.tsx to integrate all new components
+   334→- Fixed missing useState import in AnnouncementBanner
+   335→- Fixed react-hooks/set-state-in-effect lint error in useAnimatedCounter
+   336→- Verified all features via Agent Browser on desktop and mobile
+   337→
+   338→Stage Summary:
+   339→- 6 new features added: Floating WhatsApp, Scroll Progress Bar, Announcement Banner, FAQ Section, Animated Counters, Google Maps
+   340→- All features verified working on both desktop (1920x1080) and mobile (iPhone 14) viewports
+   341→- Zero console errors
+   342→- Lint passes clean
+   343→---
+   344→Task ID: 12
+   345→Agent: Main Agent
+   346→Task: Redesign product catalogue to be compact, precise, and information-dense
+   347→
+   348→Work Log:
+   349→- Analyzed 88 products across 7 categories from product-data.ts
+   350→- Completely rewrote ProductsSection.tsx with new compact design
+   351→- Replaced large image cards with compact data rows showing: product name, category badge, grade badge, primary spec, and quick action buttons
+   352→- Added slide-over Sheet panel (from right) for product details with: image, title, description, spec pills, full specs table, WhatsApp CTA, and compact quote form
+   353→- Added horizontal scrollable category tabs with product counts
+   354→- Added sort dropdown (Default, A-Z, Z-A)
+   355→- Added search that works across name, grade, and specifications
+   356→- Extracted grade and primary spec from product data for inline display
+   357→- Desktop: 12-column grid layout with table header row
+   358→- Mobile: compact stacked rows with WhatsApp quick-quote button
+   359→- Verified all interactions on desktop (1920x1080) and mobile (iPhone 14)
+   360→- Zero console errors, zero lint errors
+   361→
+   362→Stage Summary:
+   363→- Product catalogue is now compact and information-dense: all 88 products accessible without excessive scrolling
+   364→- Grade badges (e.g., "IS 2062 E250") visible inline on every product row
+   365→- One-click WhatsApp Quick Quote on every product
+   366→- Slide-over detail panel replaces full-page navigation for faster browsing
+   367→
+   368→---
+   369→Task ID: 1
+   370→Agent: Testimonials Carousel Agent
+   371→Task: Replace static testimonial grid with auto-rotating carousel
+   372→
+   373→Work Log:
+   374→- Read HomeSection.tsx to understand structure
+   375→- Added React hooks imports (useState, useEffect, useCallback, useRef)
+   376→- Added ChevronLeft, ChevronRight Lucide icon imports
+   377→- Added carousel state (activeIndex, isPaused) and navigation functions (goToIndex, goNext, goPrev)
+   378→- Added auto-rotation useEffect with 5s interval and cleanup
+   379→- Replaced static 3-col grid with single-card carousel (max-w-[600px], centered)
+   380→- Implemented crossfade animation (opacity + scale, duration-700)
+   381→- Added clickable dot indicators with active state (w-6 bg-teal-400 vs w-2 bg-stone-600)
+   382→- Added left/right arrow buttons (hidden on mobile, visible on desktop via lg:flex)
+   383→- Added pause on hover behavior via onMouseEnter/onMouseLeave
+   384→- Kept existing dark theme, background decorations, star ratings, quote text, and author info
+   385→- Made card slightly larger (p-8, size-5 stars, h-12 avatar, text-base quote)
+   386→
+   387→Stage Summary:
+   388→- Testimonials now auto-rotate as a carousel
+   389→- One card at a time, centered, with navigation controls
+   390→- Lint passes with no errors
+   391→- Dev server compiles successfully
+   392→
+   393→---
+   394→Task ID: 4
+   395→Agent: Steel Rates Agent
+   396→Task: Create steel rate indicator with live data and display component
+   397→
+   398→Work Log:
+   399→- Created /api/steel-rates with web search via z-ai-web-dev-sdk and fallback data
+   400→- Created SteelRatesSection.tsx with trend indicators, skeleton loading, error handling
+   401→- Integrated between manufacturer logos and product categories in HomeSection.tsx
+   402→
+   403→Stage Summary:
+   404→- Live steel rates section with 8 product rates
+   405→- Trend indicators (up/down/stable) with colored arrows
+   406→- 6-hour server-side cache, graceful fallback on search failure
+   407→- Horizontal scroll on mobile, 4-column grid on desktop
+   408→- WhatsApp CTA button for confirmed quotes
+   409→- Lint passes clean, dev server compiles successfully
+   410→---
+   411→Task ID: 3
+   412→Agent: PDF Quotation Generator Agent
+   413→Task: Create PDF quotation generator with API and frontend
+   414→
+   415→Work Log:
+   416→- Created /api/quotation POST endpoint with PDFKit
+   417→- Professional PDF layout with company header, items table, GST calculation
+   418→- Created QuotationGenerator.tsx with dynamic line items and auto-calculation
+   419→- Integrated into home page resources section and navigation
+   420→
+   421→Stage Summary:
+   422→- Full quotation generator: API generates professional PDFs
+   423→- Frontend has dynamic item rows, auto-calc, GST, WhatsApp sharing
+   424→- Linked from home page resources section and header nav
+   425→---
+   426→Task ID: 2
+   427→Agent: Gallery Section Agent
+   428→Task: Create photo gallery section with lightbox
+   429→
+   430→Work Log:
+   431→- Generated 5 AI images for gallery (warehouse-interior, steel-delivery, steel-yard, construction-site, quality-control)
+   432→- Reused existing ms-plate.jpg for 6th gallery item
+   433→- Created GallerySection.tsx with 6 gallery items in responsive grid
+   434→- Implemented 2x3 grid layout (first image spans 2 cols on lg)
+   435→- Built custom lightbox with fade animation, keyboard navigation (Escape, Arrow keys)
+   436→- Added hover overlay with title, description, and View icon
+   437→- Integrated into HomeSection between Why Choose Us and Testimonials
+   438→
+   439→Stage Summary:
+   440→- Photo gallery with lightbox added to homepage
+   441→- 6 images: warehouse, delivery, yard, construction, quality, products
+   442→- Fullscreen lightbox with prev/next navigation and keyboard support
+   443→- Responsive design: 1 col mobile, 2 col tablet, 3 col desktop
+   444→
+   445→---
+   446→
+   447→## Task 7 — Gallery & Testimonials API Routes (full-stack-developer)
+   448→
+   449→**Date**: 2025-01-01
+   450→
+   451→### Summary
+   452→Created two GET API routes that read from the SQLite database via Prisma:
+   453→
+   454→1. **`/api/gallery` (GET)** — Returns all active gallery images ordered by `sortOrder` ascending. Queries `db.galleryImage` with `where: { active: true }`.
+   455→
+   456→2. **`/api/testimonials` (GET)** — Returns all active testimonials ordered by `sortOrder` ascending. Queries `db.testimonial` with `where: { active: true }`.
+   457→
+   458→### Files Created
+   459→- `src/app/api/gallery/route.ts`
+   460→- `src/app/api/testimonials/route.ts`
+   461→
+   462→### Notes
+   463→- Both routes import `db` from `@/lib/db` (Prisma client).
+   464→- Lint passes with no errors.
+   465→- Neither file existed previously — no conflicts with Task 6 agent.
+   466→
+   467→---
+   468→
+   469→## Task 5 (update) — Quotation API DB Persistence (full-stack-developer)
+   470→
+   471→**Date**: 2025-01-01
+   472→
+   473→### Summary
+   474→Updated `/api/quotation` to persist every generated quotation to the SQLite database via Prisma, and added a new GET endpoint.
+   475→
+   476→### Changes Made
+   477→
+   478→1. **POST handler — DB save before PDF generation**:
+   479→   - Added `import { db } from "@/lib/db"`.
+   480→   - Extracted subtotal/gst/grandTotal calculation to run before PDF generation (moved out of the PDF loop into a `reduce()` call).
+   481→   - Added `db.quotation.create()` with nested `items.create[]` inside a try-catch — if DB save fails, PDF generation still proceeds.
+   482→   - All existing PDF generation logic preserved exactly as-is (same layout, same colors, same helper functions).
+   483→
+   484→2. **New GET handler**:
+   485→   - Returns `{ quotations: [...] }` with up to 50 quotations ordered by `createdAt desc`.
+   486→   - Includes all related `QuotationItem` records (ordered by `sortOrder asc`).
+   487→   - Serializes `createdAt` and `updatedAt` as ISO strings.
+   488→
+   489→### File Modified
+   490→- `src/app/api/quotation/route.ts`
+   491→
+   492→### Notes
+   493→- Lint passes with zero errors.
+   494→- DB save is non-blocking (wrapped in try-catch) so PDF generation always succeeds.
+   495→- Prisma schema already had `Quotation` and `QuotationItem` models — no schema changes needed.
+   496→
+   497→---
+   498→
+   499→## Task 6 — Lead/CRM & Admin Dashboard API Routes (full-stack-developer)
+   500→
+   501→**Date**: 2025-01-01
+   502→
+   503→### Summary
+   504→Created 3 new API route files (leads, leads/[id], and rewrote gallery/testimonials with full CRUD), and updated 2 existing files (admin/data, inquiry) to support Lead/CRM and Admin Dashboard features.
+   505→
+   506→### Files Created
+   507→
+   508→1. **`src/app/api/leads/route.ts`**
+   509→   - **GET**: Returns all leads ordered by `updatedAt desc`, supports `?status=` filter param, includes `_count.activities` as `activityCount`, serializes dates as ISO strings.
+   510→   - **POST**: Creates a new lead with validated `source` (one of: inquiry, contact, whatsapp, quotation, referral, website). Auto-creates an initial `LeadActivity` of type "note" with content "Lead created from {source}". Returns the created lead with activity count.
+   511→
+   512→2. **`src/app/api/leads/[id]/route.ts`**
+   513→   - **PATCH**: Updates lead fields (status, notes, followUpDate, value). If `status` changed, auto-creates a `LeadActivity` with type "status_change". Re-fetches after activity creation to include updated count.
+   514→   - **DELETE**: Deletes lead (activities cascade automatically). Returns `{ success: true }`.
+   515→   - **POST**: Adds a new activity to a lead. Validates `type` (one of: call, email, meeting, note, status_change). Verifies lead exists before creating activity.
+   516→
+   517→3. **`src/app/api/gallery/route.ts`** (rewritten — previously GET-only)
+   518→   - **GET**: Returns all active gallery images ordered by `sortOrder asc`.
+   519→   - **POST**: Creates a new gallery image (requires `title` and `src`).
+   520→   - **PATCH**: Updates a gallery image by id.
+   521→   - **DELETE**: Deletes a gallery image by id.
+   522→
+   523→4. **`src/app/api/testimonials/route.ts`** (rewritten — previously GET-only)
+   524→   - **GET**: Returns all active testimonials ordered by `sortOrder asc`.
+   525→   - **POST**: Creates a new testimonial (requires `name` and `text`, defaults `rating` to 5).
+   526→   - **PATCH**: Updates a testimonial by id.
+   527→   - **DELETE**: Deletes a testimonial by id.
+   528→
+   529→### Files Updated
+   530→
+   531→5. **`src/app/api/admin/data/route.ts`** — Added three new data sections to the existing GET endpoint:
+   532→   - `leadCounts`: Group-by query on Lead model returning counts per status.
+   533→   - `quotationCount`, `totalQuotationValue`, `recentQuotations`: Quotation aggregate data with last 5 quotations including item counts.
+   534→   - `steelRatesLastUpdate`: Latest `SteelRate.createdAt` timestamp.
+   535→
+   536→6. **`src/app/api/inquiry/route.ts`** — After creating an inquiry, also creates a `Lead` record with `source="inquiry"`, `sourceId` set to the inquiry ID, and an initial activity note including the inquiry number and product title.
+   537→
+   538→### Notes
+   539→- All routes use `NextRequest`/`NextResponse` from `next/server`.
+   540→- Error handling with try-catch on all endpoints.
+   541→- Lint passes with zero errors.
+   542→- Dev server compiles successfully with no runtime errors.
+   543→
+   544→---
+   545→Task ID: 4
+   546→Agent: full-stack-developer
+   547→Task: Rewrite /api/steel-rates to use Prisma + SQLite instead of in-memory caching
+   548→
+   549→Work Log:
+   550→- Replaced in-memory cache (`cachedResponse` / `cacheTimestamp`) with Prisma SQLite lookups
+   551→- Added `getTodayRates()` — queries `SteelRate` table for today's date string
+   552→- Added `saveRates()` — persists parsed web search results as `SteelRate` records in a transaction, compares with yesterday's DB data to calculate accurate trend (up/down/stable with ₹0.5/kg threshold)
+   553→- Added `getHistoryRates(nDays)` — fetches rates for the last N days, returns structured data with dates array and per-product low/high arrays
+   554→- Added `?history=N` query param support — appends `history` object to the JSON response
+   555→- Kept existing ZAI web search as fallback when DB has no data for today
+   556→- Kept same response format for backwards compatibility (`updated`, `rates`, `disclaimer`)
+   557→- Removed `CACHE_TTL` and in-memory variables entirely
+   558→- Route signature changed from `GET()` to `GET(request: NextRequest)` to access query params
+   559→
+   560→Stage Summary:
+   561→- Steel rates now persist in SQLite — subsequent same-day requests skip web search entirely
+   562→- `GET /api/steel-rates` returns today's rates (from DB or web search)
+   563→- `GET /api/steel-rates?history=7` returns rates + 7-day trend data
+   564→- Trend is calculated by comparing mid-price with previous day's DB records
+   565→- Fallback to hardcoded rates on any error
+   566→- Lint passes with zero errors
+   567→

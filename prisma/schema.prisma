@@ -7,6 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ── Existing: Customer inquiries from product detail sheets ──
 model Inquiry {
   id           Int      @id @default(autoincrement())
   productSlug  String?
@@ -17,9 +18,12 @@ model Inquiry {
   company      String?
   quantity     String?
   message      String?
+  status       String   @default("new")       // new | contacted | quoted | won | lost
   createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
+// ── Existing: Contact form submissions ──
 model Contact {
   id        Int      @id @default(autoincrement())
   name      String
@@ -27,5 +31,106 @@ model Contact {
   phone     String?
   subject   String?
   message   String
+  status    String   @default("new")           // new | read | replied
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ── Steel rates with daily history ──
+model SteelRate {
+  id        Int      @id @default(autoincrement())
+  product   String                          // e.g. "MS Sheet (HR)"
+  rangeLow  Float                           // e.g. 52.0
+  rangeHigh Float                           // e.g. 58.0
+  unit      String   @default("kg")         // kg
+  trend     String   @default("stable")     // up | down | stable
+  source    String   @default("web_search") // web_search | manual
+  date      String                           // "2025-01-15" – partition key
+  createdAt DateTime @default(now())
+}
+
+// ── Saved quotations ──
+model Quotation {
+  id           Int      @id @default(autoincrement())
+  quoteNumber  String   @unique              // e.g. "QT-OC-1705312800000"
+  customerName String
+  companyName  String?
+  email        String?
+  phone        String?
+  address      String?
+  notes        String?
+  subtotal     Float
+  gst          Float
+  grandTotal   Float
+  status       String   @default("draft")    // draft | sent | accepted | rejected | expired
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  items        QuotationItem[]
+}
+
+model QuotationItem {
+  id            Int       @id @default(autoincrement())
+  quotationId   Int
+  quotation     Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  product       String
+  specification String?
+  quantity      Float
+  unit          String
+  rate          Float
+  amount        Float
+  sortOrder     Int       @default(0)
+}
+
+// ── Leads / CRM ──
+model Lead {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String?
+  phone        String
+  company      String?
+  source       String                         // inquiry | contact | whatsapp | quotation | referral | website
+  sourceId     String?                        // ID of related record
+  status       String   @default("new")       // new | contacted | qualified | proposal | negotiation | won | lost | archived
+  value        Float?                         // estimated deal value
+  notes        String?
+  followUpDate String?                        // ISO date string "2025-01-20"
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  activities   LeadActivity[]
+}
+
+model LeadActivity {
+  id        Int      @id @default(autoincrement())
+  leadId    Int
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type      String                           // call | email | meeting | note | status_change
+  content   String?
+  createdAt DateTime @default(now())
+}
+
+// ── Gallery images (managed from DB) ──
+model GalleryImage {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  src         String                           // path like "/warehouse-interior.jpg"
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// ── Testimonials (managed from DB) ──
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  name      String
+  role      String?
+  company   String?
+  location  String?
+  text      String
+  rating    Int      @default(5)
+  active    Boolean  @default(true)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
