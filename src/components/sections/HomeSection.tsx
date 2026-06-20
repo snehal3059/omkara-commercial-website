@@ -31,8 +31,6 @@ interface HomeSectionProps {
 
 const manufacturers = [
   { name: 'SAIL', logo: '/logo-sail-logo.png' },
-  { name: 'SAIL (Original)', logo: '/logo-sail.png' },
-  { name: 'TATA Steel', logo: '/logo-tata-steel.png' },
   { name: 'TATA Steel Europe', logo: '/logo-corus-group.png' },
   { name: 'GAGAN GOLD', logo: '/logo-gagan-gold.png' },
   { name: 'SHYAM METALLICS', logo: '/logo-shyam-metallics.png' },
