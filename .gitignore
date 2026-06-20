@@ -50,5 +50,20 @@ test
 prompt
 
 server.log
+
+# Database files (regenerated on setup)
+/db/*.db
+/db/*.db-journal
+/db/*.db-wal
+/db/*.db-shm
 # Skills directory
 /skills/
+
+# Tool output cache
+/tool-results/
+
+# Agent context
+/agent-ctx/
+
+# Worklog (internal)
+/worklog.md
