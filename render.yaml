@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: omkara-commercial
+    runtime: node
+    plan: free
+    buildCommand: npm install && npx prisma generate && npx prisma db push --skip-generate && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        value: file:/opt/render/project/src/db/custom.db
+      - key: NEXT_PUBLIC_BASE_URL
+        sync: false
+    healthCheckPath: /

@@ -1,14 +1,5 @@
 import { PrismaClient } from '@prisma/client'
 
-const isVercel = !!process.env.VERCEL
-
-// On Vercel, use /tmp for the SQLite database file
-// Data persists within a single serverless function instance
-// Auto-seeding ensures gallery, testimonials, and steel rates are always available
-const databaseUrl = isVercel
-  ? 'file:/tmp/omkara.db'
-  : process.env.DATABASE_URL || 'file:/home/z/my-project/db/custom.db'
-
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined
 }
@@ -16,15 +7,12 @@ const globalForPrisma = globalThis as unknown as {
 export const db =
   globalForPrisma.prisma ??
   new PrismaClient({
-    datasourceUrl: databaseUrl,
-    log: isVercel ? [] : ['query'],
+    log: ['query'],
   })
 
-if (process.env.NODE_ENV !== 'production' || isVercel) {
-  globalForPrisma.prisma = db
-}
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
 
-// Auto-seed function for Vercel serverless environment
+// Auto-seed function for fresh deployments (Render, etc.)
 let seeded = false
 
 const galleryData = [
@@ -58,24 +46,20 @@ const fallbackRates = [
 export async function ensureSeeded() {
   if (seeded) return
   try {
-    // Check if data already exists
     const count = await db.galleryImage.count()
     if (count > 0) {
       seeded = true
       return
     }
 
-    // Seed gallery
     for (const item of galleryData) {
       await db.galleryImage.create({ data: item })
     }
 
-    // Seed testimonials
     for (const t of testimonialsData) {
       await db.testimonial.create({ data: t })
     }
 
-    // Seed steel rates for today
     const today = new Date().toISOString().split('T')[0]
     for (const r of fallbackRates) {
       await db.steelRate.create({ data: { ...r, date: today, source: 'manual' } })
@@ -83,7 +67,6 @@ export async function ensureSeeded() {
 
     seeded = true
   } catch (e) {
-    // Silently fail - the fallback data in API routes will handle it
     console.error('Auto-seed failed:', e)
   }
 }
