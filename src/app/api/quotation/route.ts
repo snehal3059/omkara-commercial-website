@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import PDFDocument from "pdfkit"
-import { db } from "@/lib/db"
+import { db, ensureSeeded } from "@/lib/db"
 
 interface QuotationItem {
   product: string
@@ -332,6 +332,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    await ensureSeeded()
     const quotations = await db.quotation.findMany({
       orderBy: { createdAt: "desc" },
       take: 50,

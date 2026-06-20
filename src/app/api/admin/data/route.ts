@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { db, ensureSeeded } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
 export async function GET() {
   try {
+    await ensureSeeded()
     // ── Existing: inquiries and contacts ──
     const inquiries = await db.inquiry.findMany({
       orderBy: { createdAt: "desc" },

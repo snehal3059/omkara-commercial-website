@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import ZAI from 'z-ai-web-dev-sdk'
-import { db } from '@/lib/db'
+import { db, ensureSeeded } from '@/lib/db'
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -280,6 +280,7 @@ export async function GET(request: NextRequest) {
   const history = historyDays ? parseInt(historyDays, 10) : null
 
   try {
+    await ensureSeeded()
     // Step 1: Try to get today's rates from DB
     let rates = await getTodayRates()
 

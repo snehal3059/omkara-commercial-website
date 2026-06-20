@@ -730,3 +730,16 @@ Stage Summary:
 - GitHub repo pushed successfully at: https://github.com/snehal3059/omkara-commercial-website
 - 8 manufacturer logos now displayed in the HomeSection trusted manufacturers section
 - All logos verified rendering correctly in browser
+
+---
+Task ID: 2
+Agent: main
+Task: Add ensureSeeded() calls to API routes for Vercel serverless auto-seeding
+
+Work Log:
+- Added ensureSeeded import and call to 6 API route files
+- Ensures database is seeded on Vercel cold starts
+
+Stage Summary:
+- All data-reading API routes now call ensureSeeded() before db queries
+- Gallery, testimonials, steel rates, admin data, leads, and quotations routes updated

@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { db, ensureSeeded } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
 // GET /api/gallery — list all active gallery images
 export async function GET() {
   try {
+    await ensureSeeded()
     const images = await db.galleryImage.findMany({
       where: { active: true },
       orderBy: { sortOrder: "asc" },

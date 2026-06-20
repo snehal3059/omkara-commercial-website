@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/db"
+import { db, ensureSeeded } from "@/lib/db"
 
 export const dynamic = "force-dynamic"
 
 // GET /api/leads — list all leads (optional ?status= filter)
 export async function GET(req: NextRequest) {
   try {
+    await ensureSeeded()
     const { searchParams } = new URL(req.url)
     const status = searchParams.get("status")
 
