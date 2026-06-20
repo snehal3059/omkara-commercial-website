@@ -30,8 +30,11 @@ interface HomeSectionProps {
 }
 
 const manufacturers = [
-  { name: 'SAIL', logo: '/logo-sail-logo.png' },
-  { name: 'TATA Steel Europe', logo: '/logo-corus-group.png' },
+  { name: 'SAIL', logo: '/logo-sail-new.png' },
+  { name: 'TATA Steel', logo: '/logo-tata-steel-new.png' },
+  { name: 'JSW Steel', logo: '/logo-jsw-steel.png' },
+  { name: 'Jindal Steel', logo: '/logo-jindal-steel.png' },
+  { name: 'AM/NS India', logo: '/logo-amns-india.png' },
   { name: 'GAGAN GOLD', logo: '/logo-gagan-gold.png' },
   { name: 'SHYAM METALLICS', logo: '/logo-shyam-metallics.png' },
   { name: 'ELEGANT', logo: '/logo-elegant.png' },
