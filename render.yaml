@@ -3,7 +3,7 @@ services:
     name: omkara-commercial
     runtime: node
     plan: free
-    buildCommand: mkdir -p db && npm install --include=dev && npx prisma generate && npx prisma db push --skip-generate && npm run build
+    buildCommand: mkdir -p db && npm ci && npx prisma generate && npx prisma db push --skip-generate && npx next build --no-turbopack
     startCommand: npm run start
     envVars:
       - key: NODE_ENV
